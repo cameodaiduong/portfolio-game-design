@@ -241,252 +241,376 @@ Battle tạo resource. Resource tiêu vào progression. Khi resource thiếu, ga
 
 ### 3.5 Retention / LiveOps System
 
-Retention của 1945 Air Force nằm ở việc game tạo nhiều lý do quay lại:
+#### Session flow
 
-- Daily Gift.
-- Daily Missions.
-- Free ad crates.
-- Seasonal/Holiday Events.
-- Special Events.
-- New Pilot Event.
-- PvP/Tournament.
-- Clan/Division.
-- Long-term collection.
-- Certificate và tier merge.
+Một session điển hình: mở app → check daily hooks → chọn mode → chơi 1-3 trận → claim reward → upgrade nếu đủ resource → tiếp hoặc thoát. Session ngắn (vài phút) nhưng có closure sau mỗi trận.
+
+#### Daily / Weekly hooks
+
+| Hook | Cơ chế | Vai trò |
+| ---- | ------ | ------- |
+| Daily Gift | Cycle 7 ngày, lặp 4 tuần. VIP double reward. Day 7 cho aircraft | Login incentive |
+| Daily Missions | 4 mode (Bombardment, Protect, Stealth, Assault), attempt giới hạn. Mỗi mode có currency riêng → shop | Farm resource có chọn lọc |
+| Free Ad Crates | 3 tier × 3 lượt, reset định kỳ. Bonus chest ở 80 ad views | Ad engagement hàng ngày |
 
 <img src="../1945-air-force-deconstruction/assets/retention/daily-gift.png" alt="Daily Gift: login reward tạo lý do quay lại theo chu kỳ" width="500">
 
-Thiết kế hay ở đây là LiveOps không cần tạo lại combat core. Đa số event/daily vẫn dựa trên việc chơi, farm, nhận currency, đổi thưởng. Game chỉ thay đổi wrapper:
+#### Game modes và vai trò retention
 
-```text
-Cùng là combat
--> hôm nay chơi để lấy Gold
--> ngày mai chơi để lấy event item
--> cuối tuần chơi để leo rank/tournament
--> event mới chơi để lấy skin/aircraft độc quyền
-```
+| Mode | Vai trò |
+| ---- | ------- |
+| Campaign | Progression chính, 900+ levels × 3 difficulty |
+| Daily Missions | Farm targeted resource |
+| Boss Fights | Skill check, damage test |
+| PvP (Eliminate) | Competitive tension |
+| Last Stand | Survival/endurance |
+| Co-op (United We Stand) | Social |
+| Clan/Squadron Challenges | Clan retention, exclusive rewards |
+| Events | FOMO, exclusive rewards |
 
-Retention có thể chia thành 3 tầng:
+Tất cả modes dùng chung combat core, chỉ đổi mục tiêu và reward wrapper.
 
-| Tầng       | Cơ chế                                                |
-| ---------- | ----------------------------------------------------- |
-| Short-term | Battle ngắn, reward liên tục, upgrade gần             |
-| Mid-term   | Daily missions, gear farming, campaign gates          |
-| Long-term  | Collection, tier merge, certificate, events, clan/PvP |
+#### Event system
 
-Người chơi quay lại vì daily checklist, event timer, collection gap, upgrade target và áp lực social/competitive.
+| Event type | Duration | Cơ chế |
+| ---------- | -------- | ------ |
+| Seasonal/Holiday | ~2 tuần | Event currency drop trong Campaign → exchange shop (crates, modules, skins, gear) |
+| Special Event | 1-3 ngày | Complete missions → collect medals → milestone rewards |
+| New Pilot Event | 7 ngày | Onboarding quest chain cho người mới, milestone rewards |
 
 <img src="../1945-air-force-deconstruction/assets/retention/event-independence-day.png" alt="Seasonal event: event currency + timer + exchange shop tạo FOMO và mục tiêu ngắn hạn" width="500">
 
-Rủi ro là dashboard clutter. Khi có quá nhiều event, badge, offer, shop, mission, người mới dễ bị quá tải và không biết nên ưu tiên việc nào.
+Event currency riêng per event, không tích trữ được → phải chơi trong thời gian event. Exclusive rewards ở milestone cao tạo FOMO.
+
+#### Unlock pacing
+
+Game gate system theo Career Rank để không overwhelm người mới:
+
+| Unlock | Requirement |
+| ------ | ----------- |
+| Wingman slot | Campaign Mission 2 (free P47) |
+| Device slot | Campaign Mission 8 |
+| PvP (Eliminate) | Airman 2 |
+| Sea Battlefield | Master Sergeant |
+| Clan | Higher ranks |
+
+Fun đến trước, complexity mở sau. Wingman mở sớm (mission 2) để show squad-building, nhưng Device đợi tới mission 8 — đủ thời gian hiểu upgrade/promote trên một unit trước khi thêm unit thứ ba.
+
+#### Retention 3 tầng
+
+| Tầng | Cơ chế | Ví dụ |
+| ---- | ------ | ----- |
+| Short-term | Battle ngắn, reward rõ, upgrade gần | Control đơn giản, stage ngắn, bắn/nổ/loot liên tục |
+| Mid-term | Power gate + daily routine | Campaign khó hơn, daily missions cho targeted resource, gear/engine farm |
+| Long-term | Mục tiêu khó hoàn thành | 60+ aircraft, tier merge T2/T3/T4, certificate, event-exclusive skins, clan/PvP |
+
+1945 Air Force chạy kiểu infinite treadmill: khi một trục progression gần max, game còn trục khác — aircraft → wingman → device → gear → engine → pilot gear → certificate → skin/event.
+
+#### Re-engagement
+
+Push notification khi energy đầy, event start/end, daily reset. Session end hiện next reward để kéo người chơi quay lại.
+
+#### Rủi ro
+
+- Dashboard clutter: quá nhiều event, badge, offer, shop, mission → người mới quá tải.
+- Metagame phình to: nếu người chơi không thấy next best action, retention hook biến thành confusion.
 
 ### 3.6 Monetization System
 
 1945 Air Force dùng hybrid monetization:
 
-- Rewarded ads: revive, reward, free crates.
-- Interstitial ads: chen sau campaign/map.
-- IAP packs: gems, resource, limited offers.
-- Popup offers: star upgrade (ví dụ 3 star → 10 star bằng Gems), promotion mua aircraft, nâng cấp giá rẻ cho tài khoản mới. Xuất hiện khi mở game, sau mỗi trận, khi vào menu — lặp lại liên tục.
-- VIP: lifetime spending ladder.
-- Battle Pass: premium reward track.
-- Gacha/Gear Machine: chips -> gear/beer pity.
-- Webshop/direct purchase.
+#### Ad system
+
+| Ad type | Khi nào | Lựa chọn | Mục đích |
+| ------- | ------- | --------- | -------- |
+| Rewarded video | Sau trận (double reward), sau chết (revive), daily free gems, free crates | Opt-in | Biến desire state thành ad view |
+| Interstitial | Sau hoàn thành Campaign map | Bắt buộc, skip sau delay | Baseline ad revenue |
+
+Mua bất kỳ IAP nào (kể cả $0.99) giảm hoặc bỏ interstitial → lần mua đầu là QoL upgrade, không chỉ power boost.
+
+Revive: chết giữa trận → 2 option: Gems hoặc xem ad (max 5 ad/ngày). Conversion cao vì người chơi đã đổ thời gian vào run đó.
 
 <img src="../1945-air-force-deconstruction/assets/monetization/free.png" alt="Free tab: rewarded ads được đóng gói thành crate/reward loop" width="500">
 
-Điểm quan trọng: monetization được gắn vào **desire state** của người chơi.
+Free tab trong shop: 3 crate tier × 3 lượt mỗi tier. Rewards: Gold (tới 3,000), Gems/Wrenches/Modules (tới 15). Bonus chest ở 80 total ad views.
 
-| Player state           | Monetization trigger                |
-| ---------------------- | ----------------------------------- |
-| Chết giữa trận         | Revive bằng ad hoặc Gems            |
-| Thiếu resource         | Pack, ad crate, daily grind         |
-| Muốn gear tốt          | Gear Machine/gacha                  |
-| Muốn tiến nhanh        | VIP, battle pass, IAP               |
-| Sợ lỡ event reward     | Limited offer/event pack            |
-| Khó chịu vì pop-up ads | Mua lần đầu để giảm/bỏ interstitial |
-| Vừa xong trận / mở game | Popup offer star upgrade, promotion pack |
+#### IAP
 
-1945 Air Force không cần khóa content cứng sau paywall. Thay vào đó, game bán tốc độ, convenience, attempt và advantage. F2P vẫn có thể chơi tiếp, nhưng chậm hơn. Heavy spender tiến nhanh hơn và lợi thế cộng dồn: VIP stat bonus -> clear khó hơn -> nhận reward tốt hơn -> upgrade nhanh hơn -> lại clear khó hơn.
+| IAP type | Target | Price |
+| -------- | ------ | ----- |
+| Battle Pass Premium | Active player | \$14.98 |
+| Battle Pass Premium Plus | Active player | \$19.98 |
+| Battle Pass Ultra | Heavy spender | \$39.98 |
+| Battle Pass Ultra Plus | Heavy spender | \$49.98 |
+| Gem Packs | Any | \$0.98 – \$149.98 |
+| Limited Offers | Active player | Varies (FOMO) |
 
-Điểm mạnh: monetization bám vào nhu cầu đã tồn tại trong core loop. Điểm yếu: nếu advantage cộng dồn quá mạnh, PvP/leaderboard dễ bị cảm nhận là pay-to-win. Popup offer xuất hiện quá thường xuyên (mở game, xong trận, vào menu) cũng gây khó chịu — người chơi không muốn mua vẫn bị ép nhìn liên tục.
+#### Popup offers
+
+Star upgrade (ví dụ 3 star → 10 star bằng Gems), promotion mua aircraft, nâng cấp giá rẻ cho tài khoản mới. Xuất hiện khi mở game, sau mỗi trận, khi vào menu — lặp lại liên tục.
+
+#### Gacha / Gear Machine
+
+Gear Machine gắn gacha với power thay vì chỉ cosmetic. Chips tạo pull, gear tạo stat, Beer làm pity để failed pull vẫn có giá trị. Kể cả không trúng, người chơi vẫn tích lũy Beer để đổi gear trong Mileage Shop.
+
+#### VIP
+
+Cumulative lifetime spending — không phải subscription. Mỗi $1 ≈ 10 VIP Points. VIP level permanent, không reset. Scale tới VIP 50 (5,000,000+ points).
+
+Privileges cộng dồn: permanent damage + fuel increase, bonus daily gold, thêm daily mission attempts, shop resets, equipment backup slots.
 
 <img src="../1945-air-force-deconstruction/assets/monetization/vip.png" alt="VIP privilege: lifetime spending ladder biến chi tiêu thành power và resource advantage dài hạn" width="500">
 
+#### Monetization trigger theo desire state
+
+| Player state | Trigger |
+| ------------ | ------- |
+| Chết giữa trận | Revive bằng ad hoặc Gems |
+| Thiếu resource | Pack, ad crate, daily grind |
+| Muốn gear tốt | Gear Machine/gacha |
+| Muốn tiến nhanh | VIP, battle pass, IAP |
+| Sợ lỡ event reward | Limited offer/event pack |
+| Khó chịu vì pop-up ads | Mua lần đầu để giảm/bỏ interstitial |
+| Vừa xong trận / mở game | Popup offer star upgrade, promotion pack |
+
+#### Progression speed theo spending tier
+
+| Tier | Tác động |
+| ---- | -------- |
+| F2P | Daily cap, ad-gated rewards, không stat bonus. Chậm nhất |
+| Light spender | Bỏ interstitial + Battle Pass + low VIP |
+| Heavy spender | VIP stat bonus + thêm daily attempts + premium resources. Advantage compound: stat cao → clear khó hơn → reward tốt hơn → upgrade nhanh hơn |
+
+Game bán tốc độ, convenience, attempt và advantage — không khóa content sau paywall.
+
+#### Rủi ro
+
+- Spending advantage cộng dồn quá mạnh → PvP/leaderboard bị cảm nhận là pay-to-win.
+- Popup offer xuất hiện quá thường xuyên → người chơi không muốn mua vẫn bị ép nhìn liên tục, gây khó chịu.
+
 ## 4. System Connection Map
 
-Phân tích từng system riêng lẻ chưa đủ. Phần này cho thấy cách chúng nối với nhau.
+Phần này cho thấy các system ở mục 3 tương tác với nhau thế nào — system nào trigger system nào, và người chơi bị dẫn đi đâu tại mỗi điểm.
 
-Bản đồ hệ thống của 1945 Air Force:
+```mermaid
+flowchart TD
+    Combat["① Combat"] -->|Gold, Gems, Modules| Economy["② Economy"]
+    Economy -->|Resources| Progression["③ Progression"]
+    Progression -->|Power tăng| Combat
+    Progression -->|Thiếu resource| Routing["④ Farm / Event / Ad / Shop"]
+    Routing -->|Resource| Economy
+    LiveOps["⑤ LiveOps"] -->|Event currency, FOMO| Routing
+    Monetization["⑥ Monetization"] -->|VIP, IAP| Progression
+    Monetization -->|Revive| Combat
+    Progression -->|Speed wall| Monetization
 
-```text
-Core Combat
-  -> tạo Battle Result
-  -> tạo Reward
-
-Reward
-  -> đổ vào Progression
-  -> tăng Aircraft/Wingman/Device/Pilot power
-
-Progression
-  -> giúp clear content khó hơn
-  -> tạo Power Gate mới
-  -> tạo Resource Need
-
-Resource Need
-  -> dẫn sang Economy Source
-  -> Campaign / Daily / Event / PvP / Clan / Ad / Shop / Gacha
-
-LiveOps
-  -> thay đổi lý do farm mỗi ngày/tuần
-  -> thêm event currency và exclusive reward
-
-Monetization
-  -> bán lời giải cho friction:
-     revive, resource shortage, slow progress, ad annoyance, event pressure
+    classDef node fill:#f3f4f6,stroke:#6b7280,color:#111827,stroke-width:1.5px,font-size:18px;
+    class Combat,Economy,Progression,Routing,LiveOps,Monetization node;
+    linkStyle default stroke:#6b7280,stroke-width:2px;
 ```
 
-Nếu viết ngắn gọn:
+### 4.1 Combat → Economy
 
-```text
-Combat tạo reward.
-Reward tạo upgrade.
-Upgrade tạo power.
-Power gap tạo nhu cầu resource.
-Resource shortage tạo lý do farm/quay lại/chi tiền.
-LiveOps làm mới lý do quay lại.
-Monetization bán cách đi nhanh hơn qua các điểm nghẽn.
-```
+Mỗi lần chơi một màn, game trả resource cụ thể:
 
-Các hệ thống của 1945 Air Force chạy cùng nhau như một bộ máy, không phải danh sách feature rời.
+| Mode | Resource output |
+| ---- | --------------- |
+| Campaign | Gold, Gems, Honor Points, Modules (type theo difficulty: Easy → Aircraft, Medium → Wingman, Hard → Device) |
+| Daily Missions | Mission currency riêng → đổi trong shop của mode đó (Wrenches, Modules, Chips, Gold, Gems) |
+| Events | Event currency riêng → exchange shop (skins, aircraft, Modules, Gems, gear) |
+| PvP/Tournament | Medals → Medal Shop (Wrenches, materials) |
+| Clan | Contribution Crates (Engine Batteries, materials) |
 
-## 5. Retention Analysis
+Difficulty cao hơn trả nhiều hơn: Medium ×1.4, Hard ×1.75 so với Easy. Map cuối mỗi chapter (boss map) trả Gems gấp 4× map thường.
 
-### 5.1 Short-term Retention
+### 4.2 Economy → Progression
 
-Short-term retention đến từ việc game cho người chơi vào fun rất nhanh:
+Mỗi resource đẩy người chơi vào một đường upgrade khác:
 
-- Control đơn giản.
-- Stage ngắn.
-- Bắn/nổ/loot liên tục.
-- Reward sau trận rõ.
-- Upgrade có thể đến sớm.
+| Resource | Đổ vào đâu |
+| -------- | ---------- |
+| Gold | Upgrade unit (ATK/HP) |
+| Modules | Promote (lên star) |
+| Wrenches | Gear upgrade + Engine upgrade (cạnh tranh cùng resource) |
+| Engine Batteries | Engine upgrade (scarce, event-gated) |
+| Chips | Gear Machine / gacha |
+| Towels | Pilot gear upgrade |
+| Gems | Tier merge, elite gear, gacha, revive |
+| Beer | Mileage Shop (pity từ failed gacha spin hoặc disassemble gear) |
 
-Người chơi mới không cần hiểu hết meta system để thấy vui. Họ chỉ cần né đạn, thấy máy bay bắn, thấy địch nổ, nhận thưởng và nâng cấp. Fun đến trước, complexity mở sau.
+Điểm quan trọng: Wrenches bị chia giữa Gear và Engine. Gear cho nhiều power hơn per Wrench nên thường được ưu tiên trước. Engine là target late-game sau khi Gear đã max.
 
-### 5.2 Mid-term Retention
+### 4.3 Progression → Combat + Routing
 
-Mid-term retention đến từ các power gate và daily routine:
+Power tăng → clear difficulty cao hơn → reward per run cao hơn → upgrade nhanh hơn → clear khó hơn nữa. Vòng này tự tăng tốc cho đến khi chạm upgrade wall.
 
-- Campaign ngày càng khó.
-- Cần upgrade/promote để clear tiếp.
-- Daily missions cho targeted resource.
-- Gear/engine tạo thêm mục tiêu farm.
-- Event currency tạo việc cần làm trong thời gian ngắn.
+Upgrade cost tăng mạnh tại mỗi tier transition:
 
-Ở giai đoạn này, người chơi bắt đầu hiểu muốn tiến xa thì phải quản lý resource và loadout, chơi tốt thôi chưa đủ.
+| Transition | First upgrade cost | So với Tier 1 |
+| ---------- | ------------------ | ------------- |
+| Tier 1 | 100 Gold | — |
+| Tier 2 | 12,350 Gold | ×123 |
+| Tier 3 | 29,700 Gold | ×297 |
+| Tier 4 | 229,464 Gold | ×2,295 |
 
-### 5.3 Long-term Retention
+Khi Gold income từ Campaign không đuổi kịp cost, người chơi bị đẩy sang:
 
-Long-term retention đến từ các mục tiêu khó hoàn thành:
+- Farm Daily Missions (targeted resource qua shop).
+- Chơi Event (highest-value source, exclusive rewards).
+- Xem rewarded ads (Gold, Gems, materials).
+- Mua IAP/VIP (tăng tốc).
 
-- 60+ aircraft và nhiều unit support.
-- Tier merge lên T2/T3/T4.
-- Max gear rarity/star.
-- Certificate theo từng aircraft.
-- Event-exclusive skins/aircraft.
-- Clan/PvP/status/leaderboard.
+### 4.4 LiveOps → Routing
 
-1945 Air Force chạy kiểu infinite treadmill: khi một trục progression gần max, game còn trục khác — aircraft -> wingman -> device -> gear -> engine -> pilot gear -> certificate -> skin/event.
+Events tạo currency riêng, không tích trữ được qua event khác → phải chơi trong thời gian event. Exclusive rewards (skins, aircraft) ở milestone cao tạo FOMO. Daily hooks (Daily Gift 7-day cycle, Daily Missions reset 8h, Free Ad Crates) tạo checklist hàng ngày.
 
-Rủi ro của cách này là metagame có thể phình to quá mức. Nếu người chơi không nhìn thấy next best action, retention hook sẽ biến thành confusion.
+### 4.5 Monetization → Progression (compound advantage)
 
-## 6. Monetization Analysis
+| Spending tier | Tác động |
+| ------------- | -------- |
+| F2P | Daily cap, ad-gated rewards, không stat bonus |
+| Light spender | Bỏ interstitial ads + Battle Pass + low VIP |
+| Heavy spender | VIP stat bonus + thêm daily attempts + premium resources. Mỗi advantage cộng dồn: stat cao hơn → clear khó hơn → reward tốt hơn → upgrade nhanh hơn |
 
-1945 Air Force kiếm tiền tốt vì nó đặt monetization vào đúng thời điểm người chơi có nhu cầu.
+VIP là spending ladder (lifetime, không reset). Mỗi $1 ≈ 10 VIP Points. VIP cao cho thêm damage, fuel, daily attempts, shop resets — tất cả compound lên nhau.
 
-### 6.1 Revive Monetization
+## 5. Game Flow / Player Journey
 
-Người chơi chết giữa trận, đã đổ thời gian và cảm xúc vào run đó. Revive bằng ad hoặc Gems đúng lúc: "muốn cứu run này không?" Ad placement mạnh vì nó xuất hiện đúng khi người chơi đang muốn, không phải random.
+Phần này đi theo hành trình thực tế của người chơi qua các màn hình — từ dashboard vào trận, từ trận về upgrade, từ upgrade ra tìm resource.
 
-### 6.2 Resource Monetization
+### 5.1 Battle Flow
 
-Khi người chơi thiếu Gold, Gems, Modules, Wrenches, Chips hoặc Batteries, game có thể đưa ra nhiều đường:
+<img src="assets/game-flow/1-dashboard.png" alt="Dashboard: Quick Play ở giữa dưới, squadron grid, IAP offers bên trái, events bên phải" width="500">
 
-- Farm tiếp.
-- Xem ad.
-- Đổi event/shop.
-- Mua pack.
-- Quay gacha.
+Dashboard là hub trung tâm. Quick Play là nút nổi bật nhất — hướng người chơi vào trận đấu.
 
-Monetization kiểu speed wall: không chặn tuyệt đối, nhưng làm chậm.
+<img src="assets/game-flow/2-quick-play-pre-battle.png" alt="Pre-battle: chọn difficulty, preview reward, chọn aircraft, fuel cost" width="500">
 
-### 6.3 VIP / Battle Pass
+Pre-battle: chọn difficulty, xem reward preview, chọn aircraft. Fuel cost hiển thị trước khi bấm Play.
 
-VIP và Battle Pass nhắm vào người chơi đã có engagement. Nếu người chơi đã vào daily routine, VIP/Battle Pass trở thành cách hợp lý hóa spending: mua để nhận thêm reward, thêm attempt, tăng stat, giảm friction.
+<img src="assets/game-flow/3-in-battle.png" alt="In-battle: HP bar, timer, device skill, aircraft/wingman, bullet pattern" width="500">
 
-### 6.4 Gacha / Gear Machine
+In-battle: HP bar trên cùng, timer, device skill buttons. Auto-fire giữ màn hình gọn — người chơi tập trung né.
 
-Gear Machine gắn gacha với power thay vì chỉ cosmetic. Chips tạo pull, gear tạo stat, Beer làm pity để failed pull vẫn có giá trị. Kể cả không trúng, người chơi vẫn tích lũy được gì đó.
+<img src="assets/game-flow/4-result.png" alt="Result screen: reward earned sau trận" width="500">
 
-### 6.5 Fairness Risk
+Result: hiển thị reward nhận được (Gold, Gems, Modules, stars).
 
-Điểm rủi ro là spending advantage cộng dồn. VIP tăng stat/attempt, gear/gacha tăng power, event skin có stat bonus. Trong PvE, điều này có thể được chấp nhận như pay-to-progress. Trong PvP/leaderboard, nó dễ bị cảm nhận là pay-to-win.
+<img src="assets/game-flow/5-rank-offer.png" alt="Rank Up Offer: popup star upgrade ngay sau trận" width="500">
 
-## 7. Game Flow / Player Journey
+Ngay sau result, popup Rank Up Offer xuất hiện — đề nghị upgrade star bằng Gems. Đây là monetization trigger gắn vào thời điểm người chơi vừa xong trận.
 
-Trong bản này, không cần gọi là UX như folder cũ. Phần này nên hiểu là **Game Flow**: các màn hình, popup và đường đi nối các hệ thống với nhau.
+Quay về Dashboard. Một battle session từ bấm Quick Play đến quay về mất vài phút.
 
-Flow chính:
+### 5.2 Progression Flow
 
-<img src="../1945-air-force-deconstruction/assets/ux/pre-battle-dashboard.jpeg" alt="Pre-battle screen: difficulty, reward preview, aircraft và fuel cost trước khi vào trận" width="500">
+<img src="assets/game-flow/6-dashboard-after.png" alt="Dashboard: mũi tên trỏ vào squadron grid để vào progression" width="500">
 
-```text
-Dashboard
--> Pre-battle
--> Battle
--> Result
--> Reward / Ad
--> Dashboard
-```
+Từ Dashboard bấm vào squadron grid.
 
-Flow progression:
+<img src="assets/game-flow/7-squadron-aircraft.png" alt="Squadron: chọn aircraft từ danh sách" width="500">
 
-```text
-Dashboard
--> Squadron / Unit screen
--> Aircraft / Wingman / Device / Pilot
--> Gear / Engine / Upgrade / Certificate
--> Missing resource
--> Source: Campaign / Daily / Event / Shop / Gacha
--> Return to upgrade
-```
+Chọn aircraft từ danh sách.
 
-Flow liveops:
+<img src="assets/game-flow/8-detail-aircraft.png" alt="Aircraft detail: stats, star, gear/engine slots" width="500">
 
-```text
-Dashboard badge / timer
--> Daily Gift / Mission / Event
--> Play / Claim / Earn currency
--> Event shop / Mission shop
--> Exchange reward
--> Back to loadout/progression
-```
+Aircraft detail: xem stats, star level, gear slots, engine.
 
-Flow monetization:
+<img src="assets/game-flow/9-aircraft-custom-gear.png" alt="Aircraft Gear: 7 slots (4 offensive, 3 defensive), nhiều slot còn trống/locked" width="500">
 
-```text
-Death -> Revive ad/Gems
-Result -> Interstitial / rewarded offer
-Shop -> Free crate / Money / Container / Module
-Resource shortage -> Pack / Gacha / Event offer
-```
+Gear screen: 7 slots (4 offensive trên, 3 defensive dưới). Slots trống → cần gear.
 
-Flow tốt thì người chơi biết mình đang ở đâu, thiếu gì, nên làm gì tiếp. Flow tệ thì cùng bộ system đó trở thành clutter.
+<img src="assets/game-flow/10-gear-machine.png" alt="Gear Machine: slot machine gacha, 3 loại chip, spin để lấy gear" width="500">
 
-Với 1945 Air Force, điểm mạnh là Quick Play và battle entry nhanh. Điểm yếu tiềm ẩn là late-game dashboard có quá nhiều nút, badge, offer và system entry point.
+Không có gear → vào Gear Machine (gacha). Dùng Chips để spin, nhận gear hoặc Beer (pity).
 
-## 8. Strengths & Weaknesses
+<img src="assets/game-flow/11-got-gear.png" alt="Nhận gear từ Gear Machine" width="500">
+
+Nhận gear từ spin.
+
+<img src="assets/game-flow/12-aircraft-use-gear-and-upgrade.png" alt="Equip gear vào aircraft và upgrade" width="500">
+
+Equip gear vào aircraft.
+
+<img src="assets/game-flow/13-aircraft-upgrade-gear.png" alt="Upgrade gear: dùng Wrenches để nâng star" width="500">
+
+Upgrade gear bằng Wrenches.
+
+<img src="assets/game-flow/14-used-gear.png" alt="Gear đã equip và upgrade xong" width="500">
+
+Gear equipped và upgraded — power tăng, quay lại combat mạnh hơn.
+
+### 5.3 Resource Routing Flow
+
+Khi thiếu resource để upgrade, game dẫn người chơi tới source:
+
+<img src="assets/game-flow/15-dashboard.png" alt="Dashboard: bấm Mission để tìm resource" width="500">
+
+Từ Dashboard vào Mission.
+
+<img src="assets/game-flow/16-mission-campaign.png" alt="Campaign mission select" width="500">
+
+Chọn Campaign mission để farm.
+
+<img src="assets/game-flow/17-check-protect-mission-store.png" alt="Protect Mission Store: mua Wrenches bằng mission currency" width="500">
+
+Check Daily Mission Shop — mua Wrenches bằng mission currency. Targeted farming: người chơi chọn resource cần mua.
+
+<img src="assets/game-flow/18-has-wrenches.png" alt="Đã có Wrenches" width="500">
+
+Có Wrenches → quay về upgrade gear.
+
+<img src="assets/game-flow/19-play-mission.png" alt="Chơi mission để farm" width="500">
+
+Hoặc chơi mission trực tiếp để earn thêm.
+
+<img src="assets/game-flow/20-dashboard-open-event.png" alt="Dashboard: mở Event để farm resource khác" width="500">
+
+Ngoài Daily Mission, Event cũng là source — mở Event từ Dashboard.
+
+<img src="assets/game-flow/21-exchange.png" alt="Event Exchange Shop: đổi event currency lấy reward" width="500">
+
+Event Exchange Shop: đổi event currency lấy modules, gear, skins.
+
+### 5.4 Monetization Flow
+
+<img src="assets/game-flow/22-death.png" alt="Death: Emergency Repair popup — xem ad hoặc trả 10 Gems để revive" width="500">
+
+Chết giữa trận → Emergency Repair: xem ad (No Ads left = hết lượt) hoặc trả 10 Gems.
+
+<img src="assets/game-flow/23-want-to-pay.png" alt="Dashboard với IAP offers bên trái: Starter Pack, Event, Premium Pack, Supply Pack, Equipment, Sale Gift Pack, Growth Bundle" width="500">
+
+Dashboard luôn hiển thị IAP offers bên trái: Starter Pack, Premium Pack, Supply Pack, Equipment, Growth Bundle. Popup offers cũng xuất hiện khi mở game hoặc xong trận.
+
+<img src="assets/game-flow/24-paypack.png" alt="Pay pack detail" width="500">
+
+Chi tiết một pack IAP.
+
+### 5.5 Pilot Equipment
+
+<img src="assets/game-flow/25-pilot-equipment.png" alt="Pilot Equipment: body gear slots cho pilot" width="500">
+
+Pilot có hệ gear riêng biệt — body equipment (helmet, gloves, shoes, backpack...).
+
+<img src="assets/game-flow/26-pilot-lucky-wheel.png" alt="Lucky Wheel: gacha vòng quay pilot gear, spin x1 hoặc x10" width="500">
+
+Pilot gear lấy từ Lucky Wheel — gacha vòng quay, spin x1 hoặc x10. Cần Ticket để quay.
+
+<img src="assets/game-flow/27-ticket.png" alt="Ticket: 125 Gems (x1) hoặc 1000 Gems (x10)" width="500">
+
+Ticket mua bằng Gems: 125 Gems/ticket, hoặc 1000 Gems cho 10 tickets (giảm 20%).
+
+<img src="assets/game-flow/28-pilot-gear-detail.png" alt="Pilot gear detail: stats và upgrade path" width="500">
+
+Pilot gear cho multiplier stats (double/triple damage chance) không có ở hệ thống khác. Upgrade bằng Towels + Gems.
+
+### Nhận xét
+
+- Điểm mạnh: Quick Play → battle chỉ 2 tap. Session ngắn có closure rõ (result screen + reward).
+- Điểm yếu: late-game dashboard có quá nhiều nút, badge, offer và system entry point. Popup offers xuất hiện liên tục gây clutter.
+- Chưa cover: PvP, Clan, Sea Battlefield/Battleship — các flow late-game cần rank cao hơn để unlock.
+
+## 6. Strengths & Weaknesses
 
 ### Strengths
 
@@ -532,37 +656,41 @@ Nhiều resource có vai trò gần nhau nhưng source/sink khác nhau. Nếu UI
 
 Cosmetic có stat bonus và VIP cộng dồn power có thể làm competitive fairness yếu đi.
 
-## 9. Transferable Lessons
+## 7. Transferable Lessons
 
-**Lesson 1: Giữ core action đơn giản trước khi thêm meta depth**
+**Lesson 1: Core action đơn giản, meta sâu**
 
-1945 Air Force cho thấy một combat input đơn giản vẫn có thể sống lâu nếu meta progression đủ sâu. Đừng bắt người chơi học quá nhiều điều trước khi họ thấy fun.
+Combat 1945 Air Force chỉ cần 1 ngón kéo + auto-fire. Người chơi hiểu game trong vài giây. Phần giữ chân nằm ở meta: upgrade, gear, tier, collection, event. Core đơn giản = barrier thấp. Meta sâu = lý do ở lại.
 
-**Lesson 2: Content nên là investment surface**
+**Lesson 2: Unit = investment surface**
 
-Aircraft/Wingman/Device là nơi người chơi đổ resource, tối ưu build và tạo mục tiêu dài hạn.
+Mỗi loại unit (Aircraft, Wingman, Device, Pilot) là một nơi đổ resource riêng. Thêm unit type = thêm mục tiêu upgrade, thêm lý do farm, thêm điểm monetization. 1945 Air Force có 5 loại unit × nhiều trục nâng cấp = người chơi gần như không bao giờ hết việc.
 
-**Lesson 3: Mỗi resource nên route một hành vi**
+**Lesson 3: Mỗi resource route một hành vi**
 
-Gold, Modules, Wrenches, Chips, Beer đẩy người chơi sang campaign, daily, event, gacha, shop — mỗi resource mở một đường đi riêng.
+Gold → upgrade. Modules → promote. Wrenches → gear. Chips → gacha. Beer → pity shop. Towels → pilot gear. Mỗi resource thiếu = một đường đi khác nhau (campaign, daily, event, shop). Thiết kế resource là thiết kế hành vi người chơi.
 
-**Lesson 4: LiveOps có thể tái sử dụng core gameplay**
+**Lesson 4: Tái sử dụng combat core cho LiveOps**
 
-Không cần mỗi event là một gameplay mới. Có thể giữ combat core, nhưng đổi reward, currency, timer và mục tiêu để tạo lý do quay lại.
+Campaign, daily mission, event, tournament, PvP đều dùng cùng nền combat — đổi reward wrapper, timer và mục tiêu. Không cần gameplay mới cho mỗi mode. Chi phí sản xuất content thấp, output cao.
 
-**Lesson 5: Monetization nên gắn với desire state**
+**Lesson 5: Monetization gắn vào thời điểm người chơi muốn**
 
-Offer mạnh nhất xuất hiện khi người chơi đã có nhu cầu: chết muốn revive, thiếu resource, muốn event reward, muốn tiến nhanh, muốn bỏ ads.
+Chết → revive offer. Thiếu resource → pack/gacha. Xong trận → rank up offer. Event sắp hết → FOMO push. Offer hiệu quả khi nó giải quyết nhu cầu đang có, không phải khi nó được đẩy random.
 
-**Lesson 6: Complexity phải được stage**
+**Lesson 6: Mở complexity theo nhịp**
 
-Nhiều system giúp game sống lâu, nhưng phải mở theo nhịp. Nếu đẩy tất cả vào dashboard quá sớm, depth sẽ biến thành noise.
+1945 Air Force gate system sau Career Rank: Wingman mở mission 2, Device mission 8, PvP Airman 2, Clan/Battleship rank cao hơn. Mỗi system có thời gian để người chơi học trước khi system tiếp xuất hiện. Mở hết cùng lúc = dashboard noise.
 
-**Lesson 7: Difficulty phải đọc được**
+**Lesson 7: Pity system giảm frustration gacha**
 
-Bullet hell có thể khó, nhưng người chơi phải hiểu vì sao mình chết. Readability là điều kiện để difficulty được cảm nhận là công bằng.
+Gear Machine cho Beer khi spin không trúng → đổi gear cụ thể trong Mileage Shop. Event có milestone reward → chơi đủ sẽ nhận thưởng dù RNG xấu. Gacha không có floor thì người chơi cảm thấy bị lừa.
 
-## 10. Appendix / Evidence Plan
+**Lesson 8: Session ngắn, closure rõ**
+
+Một trận kéo dài vài phút. Kết thúc luôn có result screen + reward. Người chơi thấy tiến triển dù chỉ chơi 5 phút. Phù hợp mobile: mở lên, chơi, nhận thưởng, tắt.
+
+## 8. Appendix / Evidence Plan
 
 Folder `1945-air-force-deconstruction` được dùng làm reference/evidence bank. Khi biến bản này thành portfolio hoàn chỉnh, cần gắn mỗi insight với screenshot, bảng số liệu hoặc observation cụ thể.
 
