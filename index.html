@@ -1,22 +1,28 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Game Design Portfolio</title>
     <meta
       name="description"
       content="Game design portfolio: Soko Pipe playable prototype, Soko Pipe GDD, and 1945 Air Force design deconstruction."
-    >
-    <link rel="stylesheet" href="./portfolio.css">
+    />
+    <link rel="stylesheet" href="./portfolio.css" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="#top">Game Design Portfolio</a>
       <nav aria-label="Page navigation" class="tabs">
-        <button class="tab active" type="button" data-page="overview">Overview</button>
-        <button class="tab" type="button" data-page="soko-pipe">Soko Pipe</button>
-        <button class="tab" type="button" data-page="deconstruction">1945 Analysis</button>
+        <button class="tab active" type="button" data-page="overview">
+          Overview
+        </button>
+        <button class="tab" type="button" data-page="soko-pipe">
+          Soko Pipe
+        </button>
+        <button class="tab" type="button" data-page="deconstruction">
+          1945 Analysis
+        </button>
       </nav>
     </header>
 
@@ -24,15 +30,22 @@
       <section id="overview" class="page active">
         <section class="hero">
           <p class="eyebrow">Portfolio Submission</p>
-        <h1>Playable prototype + design documentation</h1>
-        <p>
-          This page collects the two main materials for review: a playable 3D puzzle prototype with its GDD,
-          and a systems deconstruction of 1945 Air Force.
-        </p>
+          <h1>Playable prototype + design documentation</h1>
+          <p>
+            This page collects the two main materials for review: a playable 3D
+            puzzle prototype with its GDD, and a systems deconstruction of 1945
+            Air Force.
+          </p>
           <div class="actions">
-            <a class="button primary" href="./soko-pipe/app/index.html">Play Soko Pipe</a>
-            <button class="button" type="button" data-page="soko-pipe">Read Soko Pipe GDD</button>
-            <button class="button" type="button" data-page="deconstruction">Read 1945 Analysis</button>
+            <a class="button primary" href="./soko-pipe/app/index.html"
+              >Play Soko Pipe</a
+            >
+            <button class="button" type="button" data-page="soko-pipe">
+              Read Soko Pipe GDD
+            </button>
+            <button class="button" type="button" data-page="deconstruction">
+              Read 1945 Analysis
+            </button>
           </div>
         </section>
 
@@ -41,8 +54,9 @@
             <span class="kicker">Prototype</span>
             <h2>Soko Pipe</h2>
             <p>
-              A Sokoban-inspired 3D browser puzzle prototype where pushable objects can become tunnel routes.
-              Includes 14 levels, mobile controls, undo/reset, move logging, and step export.
+              A Sokoban-inspired 3D browser puzzle prototype where pushable
+              objects can become tunnel routes. Includes 14 levels, mobile
+              controls, undo/reset, move logging, and step export.
             </p>
             <a href="./soko-pipe/app/index.html">Open playable build</a>
           </article>
@@ -51,10 +65,17 @@
             <span class="kicker">Deconstruction</span>
             <h2>1945 Air Force</h2>
             <p>
-              A system-level breakdown of combat, progression, economy routing, monetization, retention,
-              events, and long-term player motivation in a mobile shoot 'em up.
+              A system-level breakdown of combat, progression, economy routing,
+              monetization, retention, events, and long-term player motivation
+              in a mobile shoot 'em up.
             </p>
-            <button class="text-button" type="button" data-page="deconstruction">Open analysis</button>
+            <button
+              class="text-button"
+              type="button"
+              data-page="deconstruction"
+            >
+              Open analysis
+            </button>
           </article>
         </section>
       </section>
@@ -64,8 +85,25 @@
           <span class="kicker">Game Design Document</span>
           <h2>Soko Pipe</h2>
           <div class="section-links">
-            <button class="lang-button active" type="button" data-doc="sokoDoc" data-lang="en">English</button>
-            <button class="lang-button" type="button" data-doc="sokoDoc" data-lang="vi">Vietnamese</button>
+            <a class="button primary" href="./soko-pipe/app/index.html"
+              >Play Soko Pipe</a
+            >
+            <button
+              class="lang-button active"
+              type="button"
+              data-doc="sokoDoc"
+              data-lang="en"
+            >
+              English
+            </button>
+            <button
+              class="lang-button"
+              type="button"
+              data-doc="sokoDoc"
+              data-lang="vi"
+            >
+              Vietnamese
+            </button>
           </div>
         </div>
         <article id="sokoDoc" class="doc">Loading Soko Pipe GDD...</article>
@@ -76,11 +114,27 @@
           <span class="kicker">Design Deconstruction</span>
           <h2>1945 Air Force</h2>
           <div class="section-links">
-            <button class="lang-button active" type="button" data-doc="airforceDoc" data-lang="en">English</button>
-            <button class="lang-button" type="button" data-doc="airforceDoc" data-lang="vi">Vietnamese</button>
+            <button
+              class="lang-button active"
+              type="button"
+              data-doc="airforceDoc"
+              data-lang="en"
+            >
+              English
+            </button>
+            <button
+              class="lang-button"
+              type="button"
+              data-doc="airforceDoc"
+              data-lang="vi"
+            >
+              Vietnamese
+            </button>
           </div>
         </div>
-        <article id="airforceDoc" class="doc">Loading 1945 Air Force analysis...</article>
+        <article id="airforceDoc" class="doc">
+          Loading 1945 Air Force analysis...
+        </article>
       </section>
     </main>
 
@@ -91,32 +145,46 @@
           en: { path: "./soko-pipe/index.md", base: "./soko-pipe/" },
         },
         airforceDoc: {
-          vi: { path: "./1945-air-force/vi-index.md", base: "./1945-air-force/" },
+          vi: {
+            path: "./1945-air-force/vi-index.md",
+            base: "./1945-air-force/",
+          },
           en: { path: "./1945-air-force/index.md", base: "./1945-air-force/" },
         },
       };
 
       const escapeHtml = (value) =>
-        value.replace(/[&<>"']/g, (char) => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;",
-        }[char]));
+        value.replace(
+          /[&<>"']/g,
+          (char) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#039;",
+            })[char],
+        );
 
       const inlineMarkdown = (text, base) => {
         let result = escapeHtml(text);
         result = result.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, src) => {
-          const normalized = src.startsWith("http") || src.startsWith("/") ? src : base + src;
+          const normalized =
+            src.startsWith("http") || src.startsWith("/") ? src : base + src;
           return `<img src="${normalized}" alt="${alt}">`;
         });
-        result = result.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, href) => {
-          const normalized = href.startsWith("http") || href.startsWith("#") || href.startsWith("/")
-            ? href
-            : base + href;
-          return `<a href="${normalized}">${label}</a>`;
-        });
+        result = result.replace(
+          /\[([^\]]+)\]\(([^)]+)\)/g,
+          (_, label, href) => {
+            const normalized =
+              href.startsWith("http") ||
+              href.startsWith("#") ||
+              href.startsWith("/")
+                ? href
+                : base + href;
+            return `<a href="${normalized}">${label}</a>`;
+          },
+        );
         result = result.replace(/`([^`]+)`/g, "<code>$1</code>");
         result = result.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
         result = result.replace(/\*([^*]+)\*/g, "<em>$1</em>");
@@ -128,20 +196,29 @@
         if (!src) return null;
         const alt = /alt=["']([^"']*)["']/.exec(line)?.[1] || "";
         const width = /width=["']([^"']+)["']/.exec(line)?.[1] || "";
-        const normalized = src.startsWith("http") || src.startsWith("/") ? src : base + src;
+        const normalized =
+          src.startsWith("http") || src.startsWith("/") ? src : base + src;
         const widthAttr = width ? ` width="${escapeHtml(width)}"` : "";
         return `<img src="${escapeHtml(normalized)}" alt="${escapeHtml(alt)}"${widthAttr}>`;
       };
 
       const renderTable = (rows, base) => {
         const cells = rows.map((row) =>
-          row.trim().replace(/^\|/, "").replace(/\|$/, "").split("|").map((cell) => cell.trim())
+          row
+            .trim()
+            .replace(/^\|/, "")
+            .replace(/\|$/, "")
+            .split("|")
+            .map((cell) => cell.trim()),
         );
         const [head, , ...body] = cells;
         const thead = `<thead><tr>${head.map((cell) => `<th>${inlineMarkdown(cell, base)}</th>`).join("")}</tr></thead>`;
-        const tbody = `<tbody>${body.map((row) =>
-          `<tr>${row.map((cell) => `<td>${inlineMarkdown(cell, base)}</td>`).join("")}</tr>`
-        ).join("")}</tbody>`;
+        const tbody = `<tbody>${body
+          .map(
+            (row) =>
+              `<tr>${row.map((cell) => `<td>${inlineMarkdown(cell, base)}</td>`).join("")}</tr>`,
+          )
+          .join("")}</tbody>`;
         return `<table>${thead}${tbody}</table>`;
       };
 
@@ -162,7 +239,9 @@
 
         const flushList = () => {
           if (!list.length) return;
-          html.push(`<ul>${list.map((item) => `<li>${inlineMarkdown(item, base)}</li>`).join("")}</ul>`);
+          html.push(
+            `<ul>${list.map((item) => `<li>${inlineMarkdown(item, base)}</li>`).join("")}</ul>`,
+          );
           list = [];
         };
 
@@ -183,7 +262,9 @@
 
           if (line.startsWith("```")) {
             if (inCode) {
-              html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+              html.push(
+                `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`,
+              );
               code = [];
               inCode = false;
             } else {
@@ -223,13 +304,17 @@
           if (heading) {
             flushBlocks();
             const level = Math.min(heading[1].length + 1, 5);
-            html.push(`<h${level}>${inlineMarkdown(heading[2], base)}</h${level}>`);
+            html.push(
+              `<h${level}>${inlineMarkdown(heading[2], base)}</h${level}>`,
+            );
             continue;
           }
 
           if (line.startsWith("> ")) {
             flushBlocks();
-            html.push(`<blockquote>${inlineMarkdown(line.slice(2), base)}</blockquote>`);
+            html.push(
+              `<blockquote>${inlineMarkdown(line.slice(2), base)}</blockquote>`,
+            );
             continue;
           }
 
@@ -244,7 +329,8 @@
         }
 
         flushBlocks();
-        if (inCode) html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+        if (inCode)
+          html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
         return html.join("\n");
       };
 
@@ -252,7 +338,8 @@
         const target = document.getElementById(id);
         try {
           const response = await fetch(path);
-          if (!response.ok) throw new Error(`${response.status} ${response.statusText}`);
+          if (!response.ok)
+            throw new Error(`${response.status} ${response.statusText}`);
           const markdown = await response.text();
           target.innerHTML = renderMarkdown(markdown, base);
         } catch (error) {
@@ -260,7 +347,9 @@
         }
       };
 
-      Object.entries(docs).forEach(([id, variants]) => loadDoc({ id, ...variants.en }));
+      Object.entries(docs).forEach(([id, variants]) =>
+        loadDoc({ id, ...variants.en }),
+      );
 
       document.querySelectorAll(".lang-button").forEach((button) => {
         button.addEventListener("click", () => {
@@ -269,7 +358,9 @@
           if (!variant) return;
           document
             .querySelectorAll(`.lang-button[data-doc="${doc}"]`)
-            .forEach((item) => item.classList.toggle("active", item === button));
+            .forEach((item) =>
+              item.classList.toggle("active", item === button),
+            );
           loadDoc({ id: doc, ...variant });
         });
       });
@@ -279,9 +370,14 @@
 
       const showPage = (id) => {
         const nextId = document.getElementById(id) ? id : "overview";
-        pages.forEach((page) => page.classList.toggle("active", page.id === nextId));
-        tabControls.forEach((control) => control.classList.toggle("active", control.dataset.page === nextId));
-        if (location.hash !== `#${nextId}`) history.replaceState(null, "", `#${nextId}`);
+        pages.forEach((page) =>
+          page.classList.toggle("active", page.id === nextId),
+        );
+        tabControls.forEach((control) =>
+          control.classList.toggle("active", control.dataset.page === nextId),
+        );
+        if (location.hash !== `#${nextId}`)
+          history.replaceState(null, "", `#${nextId}`);
         window.scrollTo({ top: 0, behavior: "instant" });
       };
 
@@ -289,7 +385,9 @@
         control.addEventListener("click", () => showPage(control.dataset.page));
       });
 
-      window.addEventListener("hashchange", () => showPage(location.hash.replace("#", "")));
+      window.addEventListener("hashchange", () =>
+        showPage(location.hash.replace("#", "")),
+      );
       showPage(location.hash.replace("#", "") || "overview");
     </script>
   </body>
