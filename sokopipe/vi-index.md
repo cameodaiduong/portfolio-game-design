@@ -46,7 +46,20 @@ Soko Pipe, box ống vừa là vật cản vừa là đường đi tuỳ hướn
 
 ## 2. Gameplay
 
-### 2.1 Mechanics
+### 2.1 Game Objects
+
+| ID | Tên | Nhóm | Visual (mesh) | Tương tác |
+|----|-----|------|---------------|-----------|
+| `0` | Sàn trống | Tile | flat tile | Player đi bộ qua được |
+| `1` | Tường | Tile | cube đặc, tối | Chặn di chuyển, chặn push, chặn tunnel |
+| `2` | Player | Actor | nhân vật nhỏ | Di chuyển 4 hướng, push object, xuyên tunnel |
+| `3` | Goal | Tile endpoint | tile highlight vàng | Player tới đây thì thắng level |
+| `4` | Box thường | Push object | cube đặc, xám | Bị đẩy, chặn đường, không xuyên |
+| `5` | Box ngang | Tunnel box | cylinder rỗng nằm ngang | Bị đẩy; entry/traverse tunnel theo trái-phải |
+| `6` | Box dọc | Tunnel box | cylinder rỗng đứng dọc | Bị đẩy; entry/traverse tunnel theo lên-xuống |
+| `7` | Connector | Tunnel box | khớp nối đa hướng | Bị đẩy; nối/rẽ route sau khi route bắt đầu từ `5/6` |
+
+### 2.2 Mechanics
 
 Scope hiện tại: **14 level**, tập trung vào 3 lớp mechanic:
 
@@ -67,19 +80,6 @@ Vì vậy mỗi level có 2 lớp bài toán cùng lúc:
 2. **Route puzzle**: sau khi đẩy xong, tunnel phải nối thành đường hợp lệ để player đi qua.
 
 Không có directional corner, key/door, color gate, enemy, rotate tile trong bản portfolio/MVP.
-
-### 2.2 Game Objects
-
-| ID | Tên | Nhóm | Visual (mesh) | Tương tác |
-|----|-----|------|---------------|-----------|
-| `0` | Sàn trống | Tile | flat tile | Player đi bộ qua được |
-| `1` | Tường | Tile | cube đặc, tối | Chặn di chuyển, chặn push, chặn tunnel |
-| `2` | Player | Actor | nhân vật nhỏ | Di chuyển 4 hướng, push object, xuyên tunnel |
-| `3` | Goal | Tile endpoint | tile highlight vàng | Player tới đây thì thắng level |
-| `4` | Box thường | Push object | cube đặc, xám | Bị đẩy, chặn đường, không xuyên |
-| `5` | Box ngang | Tunnel box | cylinder rỗng nằm ngang | Bị đẩy; entry/traverse tunnel theo trái-phải |
-| `6` | Box dọc | Tunnel box | cylinder rỗng đứng dọc | Bị đẩy; entry/traverse tunnel theo lên-xuống |
-| `7` | Connector | Tunnel box | khớp nối đa hướng | Bị đẩy; nối/rẽ route sau khi route bắt đầu từ `5/6` |
 
 ### 2.3 Push Core
 
@@ -107,27 +107,37 @@ Tunnel box là object đẩy được như box thường, nhưng nếu được 
 
 #### Box ngang
 
-- Box tunnel thẳng theo trục trái/phải
-- Player trên sàn, đi vào `5` theo trái/phải:
-  - Ô tiếp theo sau `5` là pipe/connector đúng hướng hoặc goal `3` thì player bước vào pipe, tốn 1 move
-  - Nếu không thì đẩy `5` như box thường
-- Đi vào từ trên/dưới thì không kích hoạt tunnel, chỉ đẩy
+- Box tunnel thẳng theo trục trái/phải.
+- Khi `5` nối theo chiều ngang với `5`, `7`, hoặc `3`, nó tạo thành pipe ngang hợp lệ.
+- Các pattern hợp lệ cơ bản:
+  - `5-5`: 2 box ngang nối thành tunnel ngang.
+  - `5-3`: box ngang nối trực tiếp vào goal.
+  - `5-7`: box ngang nối vào connector để route có thể tiếp tục/rẽ hướng.
+- Player có thể đi vào pipe ngang từ bên trái hoặc bên phải, rồi di chuyển qua từng box thuộc pipe.
+- Số steps khi đi trong pipe bằng số ô pipe/goal mà player đi qua, không teleport qua cả chuỗi.
+- Khi chưa nối hợp lệ, player không thể đi xuyên qua `5`.
 
 #### Box dọc
 
-- Box tunnel thẳng theo trục lên/xuống
-- Player trên sàn, đi vào `6` theo lên/xuống:
-  - Ô tiếp theo sau `6` là pipe/connector đúng hướng hoặc goal `3` thì player bước vào pipe, tốn 1 move
-  - Nếu không thì đẩy `6` như box thường
-- Đi vào từ trái/phải thì không kích hoạt tunnel, chỉ đẩy
+- Box tunnel thẳng theo trục lên/xuống.
+- Khi `6` nối theo chiều dọc với `6`, `7`, hoặc `3`, nó tạo thành pipe dọc hợp lệ.
+- Các pattern hợp lệ cơ bản:
+  - `6-6`: 2 box dọc nối thành tunnel dọc.
+  - `6-3`: box dọc nối trực tiếp vào goal.
+  - `6-7`: box dọc nối vào connector để route có thể tiếp tục/rẽ hướng.
+- Player có thể đi vào pipe dọc từ phía trên hoặc phía dưới, rồi di chuyển qua từng box thuộc pipe.
+- Số steps khi đi trong pipe bằng số ô pipe/goal mà player đi qua, không teleport qua cả chuỗi.
+- Khi chưa nối hợp lệ, player không thể đi xuyên qua `6`.
 
 #### Connector
 
 - Là box tunnel đa hướng
 - Bị đẩy như box thường khi player đi vào từ sàn
 - Không bao giờ là tunnel entry point: player không được bắt đầu xuyên từ `7`
-- Chỉ hoạt động khi player đã bắt đầu route từ `5` hoặc `6`
-- Khi đang ở trong tunnel route, connector nhận mọi hướng vào và cho đi thẳng hoặc rẽ sang mọi hướng hợp lệ
+- Chỉ hoạt động khi nối với 2 đầu tunnel hợp lệ
+- Ví dụ hợp lệ: `6-7-3`, `5-7-5`, `6-7-5`
+- `5-7` hoặc `6-7` một phía chưa đủ để tạo pipe
+- Khi route hợp lệ, player có thể đi xuyên qua connector để đi thẳng hoặc rẽ hướng
 - Dùng để:
   - Nối route ngang và dọc
   - Cho route đi thẳng qua giữa
@@ -139,8 +149,8 @@ Traversal là di chuyển **từng ô**, mỗi ô tốn 1 move. Player không te
 
 **Entry (từ sàn vào pipe):**
 - Player trên sàn, đi vào `5` theo ngang hoặc `6` theo dọc
-- Điều kiện: ô tiếp theo sau pipe là pipe/connector đúng hướng hoặc goal `3`
-- Đủ điều kiện thì player bước vào pipe (đứng trên pipe), tốn 1 move
+- Điều kiện: pipe đó đang thuộc route hợp lệ, ví dụ `5-3`, `5-5`, `6-7-3`
+- Đủ điều kiện thì player bước vào pipe và đứng trên cùng ô với pipe, tốn 1 move
 - Không đủ thì đẩy pipe như box thường
 - `7` (connector) không bao giờ là entry point
 
@@ -152,14 +162,14 @@ Traversal là di chuyển **từng ô**, mỗi ô tốn 1 move. Player không te
 
 **Win:** player bước lên ô goal `3` thì thắng level
 
-**Ví dụ:** `2 0 5 0 3`
+**Ví dụ:** `P 0 5 0 3`
 ```
-move 1 →: đi bộ sang c1           → 0 2 5 0 3
-move 2 →: đẩy 5 sang c3           → 0 0 2 5 3
+move 1 →: đi bộ sang c1           → 0 P 5 0 3
+move 2 →: đẩy 5 sang c3           → 0 0 P 5 3
            (ô sau 5 là floor → đẩy, không phải tunnel)
-move 3 →: bước vào 5              → 0 0 0 [P trên 5] 3
-           (ô sau 5 là goal → entry OK)
-move 4 →: bước ra goal → win
+move 3 →: bước vào pipe 5         → 0 0 0 [5+P] 3
+           (5 đang nối với goal thành pattern 5-3, nên player đứng trên cùng ô với 5)
+move 4 →: đi từ pipe sang goal    → 0 0 0 5 P → win
 ```
 
 ### 2.7 Pipe Visual Feedback
@@ -171,7 +181,7 @@ move 4 →: bước ra goal → win
 
 ### 2.8 Game Rules
 
-- **Win condition:** player đến ô goal `3`
+- **Win condition:** player đến ô goal `3` thông qua tunnel box
 - **Lose condition:** không có lose state — puzzle game, sai thì undo/reset
 - **Undo:** unlimited, lùi từng bước
 - **Reset:** về trạng thái đầu level, không giới hạn
@@ -180,19 +190,25 @@ move 4 →: bước ra goal → win
 
 | Case | Kết quả |
 |------|---------|
-| Đẩy pipe/connector đang nối tunnel | Tunnel đứt, visual revert |
-| Player đang đứng trên pipe, pipe có bị đẩy không? | Không — chỉ player đẩy, không có ngoại lực |
-| Connector nhận vào và đi ra cùng trục | Hợp lệ — connector hoạt động như đoạn nối thẳng |
+| `5-7` hoặc `6-7` một phía | Chưa tính là pipe hợp lệ; connector cần nối đủ 2 đầu |
+| Player đi vào connector `7` từ sàn | Không được; connector không phải entry point |
+| Pipe đã nối thành route | Vẫn có thể bị đẩy nếu player tiếp cận như object push |
+| Player đang trong pipe nhưng đi sai hướng route | Không di chuyển |
+| Goal `3` đứng cạnh sàn thường | Không thắng bằng đi bộ trực tiếp; goal phải vào bằng pipe route |
+| Tunnel dài nhiều ô | Không teleport; mỗi ô đi qua tốn 1 step |
+| Connector nhận vào và đi ra cùng trục | Hợp lệ; connector có thể hoạt động như đoạn nối thẳng |
 
-### 2.10 Mechanic đã cắt khỏi scope
+### 2.10 Future Expansion / Out of MVP Scope
 
-| Mechanic | Lý do cắt |
-|----------|-----------|
-| Color gate (ống màu + đổi màu player) | Thời gian không đủ |
-| Enemy (quái tuần tra, trốn trong ống) | Thời gian không đủ, cần AI pathfinding |
-| Ô xoay (rotate tile) | Không cần — connector đã giải quyết đổi hướng |
-| Directional corners | Connector đa hướng đã đủ phức tạp, corner thêm vào không cần thiết |
-| Key/Door | Không liên quan tới ý chính "pipe vừa là vật cản vừa là đường đi", dễ làm scope loãng |
+Các mechanic dưới đây có thể mở rộng game sau MVP, nhưng chưa đưa vào bản portfolio để giữ core loop tập trung vào **push object + build tunnel route**.
+
+| Mechanic | Hướng mở rộng | Lý do chưa đưa vào MVP |
+|----------|---------------|-------------------------|
+| Color gate | Pipe/player có màu, chỉ đi qua route đúng màu | Thêm state mới, dễ làm lệch trọng tâm khỏi pipe-push core |
+| Enemy | Enemy tuần tra, player dùng tunnel để né hoặc đổi vị trí | Cần AI/pathfinding riêng, phù hợp phase sau |
+| Ô xoay (rotate tile) | Player xoay hướng pipe hoặc connector để đổi route | Connector hiện đã đủ giải quyết bài toán rẽ hướng trong MVP |
+| Directional corners | Pipe góc cố định như `└`, `┐` để tạo route có hướng cụ thể | Tăng số object cần học; connector đa hướng đang đủ rõ cho 14 level hiện tại |
+| Key/Door | Mở khóa vùng hoặc endpoint mới | Không phục vụ trực tiếp ý chính: box vừa là vật cản vừa là đường đi |
 
 ---
 
@@ -206,7 +222,7 @@ move 4 →: bước ra goal → win
 - **Goal luôn trong tường hoặc vùng không đi bộ trực tiếp được** — player phải vào goal bằng pipe/tunnel route
 - **Tunnel entry phải là ống thẳng** — player chỉ bắt đầu xuyên từ `5` theo ngang hoặc `6` theo dọc
 - **Connector không vào trực tiếp từ sàn** — chỉ hoạt động khi route đã bắt đầu từ `5` hoặc `6`
-- **Connector route tối thiểu 3 ô** — entry pipe, connector, exit pipe/goal
+- **Connector phải nối đủ 2 đầu hợp lệ** — ví dụ `6-7-3`, `5-7-5`, `6-7-5`; một đầu `5-7` hoặc `6-7` chưa đủ
 - **Tunnel phải là bridge/access tool** — route phải bắc cầu qua tường/khoảng bị chặn hoặc đưa player tới vị trí push mới
 - **Không text tutorial** — layout phải tự dạy mechanic
 
@@ -223,6 +239,25 @@ Core progression:
 1. Player học pipe như **object để đẩy**
 2. Player học pipe như **đường để đi xuyên**
 3. Player học pipe/connector như **route phải tạo hoặc căn đúng**
+
+Chi tiết progression theo level:
+
+| Level | Mechanic focus | Mục tiêu thiết kế |
+|-------|----------------|-------------------|
+| 1 | Horizontal pipe + goal | Dạy pipe có thể bị đẩy vào goal để tạo đường thắng |
+| 2 | Vertical pipe | Giữ cùng luật, chỉ đổi trục để player hiểu `5` và `6` là cùng hệ mechanic |
+| 3 | Align before push | Buộc player đứng cùng trục trước khi đẩy pipe |
+| 4 | Push from behind | Dạy đi vòng để đứng đúng phía object |
+| 5 | Normal box obstacle | Box thường chặn vị trí push, không phải route |
+| 6 | Straight pipe boss | Kết hợp horizontal, vertical, box và thứ tự dọn đường |
+| 7 | First straight tunnel | Dạy tunnel là bridge/access, không chỉ là endpoint vào goal |
+| 8 | Multi-axis tunnel | Dùng tunnel dọc để mở đường tới tunnel ngang |
+| 9 | Align tunnel pieces | Căn 2 pipe cùng trục để tạo bridge |
+| 10 | Tunnel + box dependency | Dùng tunnel để tới vùng mới rồi dọn box/push pipe |
+| 11 | Straight tunnel boss | Kiểm tra đọc route, access side, box order và push positioning |
+| 12 | Connector as route piece | Connector nằm trong route, không phải entry point |
+| 13 | Connector turn | Connector đổi hướng route, player phải đọc đường rẽ |
+| 14 | Build connector route | Final test: đẩy connector vào đúng vị trí để tự tạo đường di chuyển |
 
 ### 3.3 Chapter Structure
 
@@ -503,6 +538,8 @@ Dạy: Ch.2 boss. Dọn box, căn pipe dọc thành bridge, dùng tunnel xuyên 
 
 **Level 12 — Connector bridge**
 
+Dạy: connector là một đoạn route, không phải entry point. Player cần tạo route hợp lệ trước khi dùng connector để đi qua vùng bị chặn.
+
 ```
 1 1 1 1 1 1 1
 1 2 0 0 0 0 1
@@ -518,8 +555,14 @@ Dạy: Ch.2 boss. Dọn box, căn pipe dọc thành bridge, dùng tunnel xuyên 
 - Steps: 36
 - Solution: →, →, ↓, ↓, ←, ↓, ↓, →, →, ↑, ←, ↑, ←, ↓, →, ↑, ↑, ↑, →, →, ↓, ←, ↑, ←, ↓, ↓, ←, ↓, →, →, ↓, ↓, →, ↑, ↑, →
 - Concept: connector nằm trong route di chuyển, bắc qua vùng bị chặn
+- Flow:
+  - Dọn box để mở không gian reposition
+  - Căn pipe dọc và connector thành route hợp lệ
+  - Dùng route đã tạo để đi qua vùng bị tường chặn và tiếp cận goal
 
 **Level 13 — Reverse bend**
+
+Dạy: connector có thể đổi hướng route. Player phải đọc connector như một nút nối, không phải một pipe thẳng đơn giản.
 
 ```
 1 1 1 1 1 1 1 1 1 1
@@ -535,9 +578,15 @@ Dạy: Ch.2 boss. Dọn box, căn pipe dọc thành bridge, dùng tunnel xuyên 
 - Grid: 10×8
 - Steps: 36
 - Solution: ↑, →, ↑, ↑, →, ↑, ←, ←, ←, ←, ←, ↑, ←, ↓, →, →, ↓, ↓, →, →, ↓, →, ↑, ↑, →, ↑, ←, ←, ←, ←, ←, ↑, ←, ↓, ↓, ←
-- Concept: vào bằng pipe dọc, qua connector, rẽ ra pipe ngang, vào goal
+- Concept: dùng pipe dọc làm entry, qua connector để đổi hướng route và tiếp cận goal
+- Flow:
+  - Dọn box để mở đường đi quanh khu trung tâm
+  - Căn pipe dọc với connector để tạo route có điểm rẽ
+  - Đi xuyên route qua connector, sau đó reposition để vào goal bằng route hợp lệ
 
 **Level 14 — Connect to move**
+
+Dạy: final test của MVP. Connector không chỉ là đoạn route có sẵn; player phải đẩy connector vào đúng vị trí để tự tạo đường di chuyển.
 
 ```
 1 1 1 1 1 1 1 1 1 1 1 1
@@ -556,6 +605,11 @@ Dạy: Ch.2 boss. Dọn box, căn pipe dọc thành bridge, dùng tunnel xuyên 
 - Steps: 66
 - Solution: →, ↓, ↓, ↓, ↓, ↓, ↓, →, →, ↑, ↑, ↑, ←, →, ↓, ↓, ↓, ←, ←, ↑, ↑, ↑, ↑, ↑, →, ↑, →, →, ↓, ←, ↑, ←, ↓, ↓, ←, ↓, →, ←, ↓, ↓, →, ↓, →, ↑, ↑, ↑, →, →, ↓, →, →, →, ↓, →, ↓, ←, ←, →, ↑, ↑, ←, ←, ↓, ↓, ↓, ↓
 - Concept: đẩy connector vào khe để tạo route, rồi dùng route đó để di chuyển tới goal
+- Flow:
+  - Dọn box và pipe để mở vị trí push
+  - Đưa connector vào vị trí nối giữa các tunnel box
+  - Dùng route vừa tạo để sang vùng mới, tiếp tục reposition pipe
+  - Tạo route cuối dẫn tới goal
 
 ---
 
@@ -581,81 +635,73 @@ Dạy: Ch.2 boss. Dọn box, căn pipe dọc thành bridge, dùng tunnel xuyên 
 | 11 | Ch.2 boss | Straight tunnel + push side access + box/order |
 | 14 | MVP final | Connector placement + route creation + existing pipe/tunnel rules |
 
-### 3.9 Step Targets
-
-| Level | Chapter | Steps | Vai trò |
-|-------|---------|-------|---------|
-| 1 | Straight Pipes | 3 | Learn horizontal |
-| 2 | Straight Pipes | 3 | Learn vertical |
-| 3 | Straight Pipes | 5 | Align with pipe |
-| 4 | Straight Pipes | 8 | Đi vòng ra phía sau pipe |
-| 5 | Straight Pipes | 9 | Box obstacle |
-| 6 | Straight Pipes | 13 | Ch.1 boss |
-| 7 | Straight Tunnels | 13 | Tunnel to push side |
-| 8 | Straight Tunnels | 10 | Multi-axis bridge |
-| 9 | Straight Tunnels | 22 | Align vertical pipes |
-| 10 | Straight Tunnels | 41 | Tunnel + box/access |
-| 11 | Straight Tunnels | 38 | Ch.2 boss |
-| 12 | Connector | 36 | Connector bridge/access |
-| 13 | Connector | 36 | Connector route reading |
-| 14 | Connector | 66 | Connect to move / MVP final |
-
----
-
 ## 4. UX & Flow
 
 ### 4.1 Game Flow
 
 ```
-Main Menu -- Level Select -- Gameplay -- Win Panel -- Level Select
-                                |
-                           Pause Menu -- Resume / Reset / Level Select
+Open Prototype -- Gameplay -- Level Complete Popup -- Auto Next Level
+                      |                    |
+                  Level Select          Export Steps
+                      |
+                 Reset / Undo
 ```
+
+Prototype ưu tiên mở thẳng vào gameplay để người xem portfolio có thể chơi ngay, không phải đi qua nhiều menu.
 
 ### 4.2 Screens
 
 | Màn hình | Nội dung |
 |----------|----------|
-| Main Menu | Logo Soko Pipe, nút Play, nút Credits |
-| Level Select | Grid 14 level, chưa unlock thì khoá, đã clear thì có tick |
-| Gameplay | Grid + HUD |
-| Win Panel | "Level Complete", số bước, nút Next Level |
-| Pause Menu | Resume, Reset, Back to Level Select |
+| Gameplay | 3D grid, level hiện tại, move count, control panel |
+| Level Select | Danh sách 14 level để test nhanh, cho phép nhảy level trong prototype |
+| Level Complete Popup | Thông báo clear level, số bước, countdown tự qua màn sau |
+| Export Steps | Xuất danh sách input theo thứ tự để dùng lại trong GDD/solution |
 
 ### 4.3 HUD
 
-- Level number (góc trên trái)
-- Move count (góc trên phải)
+- Level number
+- Move count
+- Move history / thứ tự input đã đi
 - Undo button
 - Reset button
-- Pause/Menu button
+- Export steps button
+- Level select / next level control
+- Mobile D-pad: lên, xuống, trái, phải
 
 ### 4.4 Unlock Logic
 
-- Level 1 mở sẵn
-- Clear level N thì unlock level N+1
+- Portfolio prototype ưu tiên test nhanh nên có thể chọn trực tiếp 14 level
+- Khi clear level N, game tự chuyển sang level N+1 sau 5 giây
 - Không star rating, không optimal step bonus
+- Move count dùng để ghi solution và đánh giá độ dài level, không dùng làm điểm số
 
 ### 4.5 Input
 
 - Desktop: arrow keys hoặc WASD
-- Mobile/iPad: swipe 4 hướng
+- Mobile/iPad: D-pad 4 hướng trên UI
+- Button UI: Undo, Reset, Export Steps
 - Mỗi input tính 1 bước di chuyển
+- Undo không tính thêm bước
 
 ### 4.6 Camera
 
-Isometric cố định. Không zoom/pan/rotate. Grid 5x5-7x7 fit 1 màn hình.
+Isometric cố định. Không zoom/pan/rotate trong bản portfolio để tránh người chơi bị lệch hướng input. Camera tự fit theo kích thước level và responsive theo màn hình desktop/mobile.
 
 ### 4.7 Feedback
 
 | Hành động | Feedback |
 |-----------|----------|
 | Đẩy box/pipe | Animation slide 1 ô |
-| Xuyên tunnel | Player di chuyển qua pipe |
+| Xuyên tunnel | Player di chuyển từng ô qua pipe, không teleport |
 | Đẩy không được | Không di chuyển, nhẹ shake |
-| Pipe nối thành tunnel | Visual nối liền, giảm opacity |
-| Win | Particle effect + sound |
-| Undo | Animation lùi nhanh |
+| Pipe nối thành tunnel | Các box trong route đổi màu/nối liền để đọc được đường đi |
+| Connector hợp lệ | Connector đổi visual cùng route với pipe |
+| Goal chưa hợp lệ | Goal giữ màu cảnh báo/chưa active |
+| Goal đã nối route | Goal đổi sang trạng thái active và nối vào tunnel |
+| Win | Popup lớn, hiển thị số bước và countdown auto-next |
+| Export steps | Copy/download chuỗi input solution |
+| Undo | Lùi 1 state và cập nhật move history |
 
 ---
 
@@ -664,7 +710,8 @@ Isometric cố định. Không zoom/pan/rotate. Grid 5x5-7x7 fit 1 màn hình.
 ### 5.1 Stack
 
 - Three.js (render 3D mesh)
-- TypeScript hoặc vanilla JS
+- Vanilla JavaScript
+- HTML/CSS cho HUD, popup, mobile control
 - Grid logic dùng 2D array
 
 ### 5.2 Level Data Format
@@ -692,22 +739,21 @@ const level1 = [
 
 | System | Mô tả |
 |--------|-------|
-| Grid | Parse level array, render mesh |
-| Input | Arrow keys / WASD / swipe thành direction |
-| Move | Validate, push logic, tunnel pass-through |
-| Tunnel check | Từ ô player, follow hướng pipe đến khi ra sàn trống hoặc bị chặn |
-| Undo | Stack of grid states, pop on undo |
-| Win check | Player position === goal position |
-| Level manager | Load level, reset, next level, unlock |
+| Level parser | Đọc 2D array, tách player position, goal position và object grid |
+| Renderer | Render floor, wall, player, box, tunnel box, connector, goal bằng mesh 3D |
+| Input | Map keyboard/D-pad button thành 4 hướng di chuyển |
+| Move resolver | Xử lý walk, push object, block movement và tunnel traversal |
+| Tunnel route check | Kiểm tra các cụm `5/6/7/3` có nối thành route hợp lệ không |
+| Visual state | Đổi màu/nối visual cho pipe, connector, goal khi route hợp lệ |
+| Undo/reset | Lưu state trước mỗi move hợp lệ, cho phép undo từng bước hoặc reset level |
+| Move logging | Lưu thứ tự input để hiển thị move history và export solution |
+| Level manager | Load 14 level, chuyển level, auto-next sau khi clear |
+| Responsive UI | Layout desktop/mobile, D-pad cho màn hình cảm ứng |
 
-### 5.4 Build Order
+### 5.4 Prototype Scope
 
-1. Grid render + player move (30 phút)
-2. Push logic (30 phút)
-3. Tunnel pass-through (30 phút)
-4. Undo + reset (15 phút)
-5. Level manager + 14 level data (45 phút)
-6. UI: menu, level select, win panel (30 phút)
-7. Polish: animation, mesh, sound (30 phút)
-
-Tổng: ~4 tiếng
+- Playable trực tiếp trên browser, không cần backend
+- 14 level cố định, không random/procedural
+- Camera cố định để input luôn dễ hiểu
+- Tập trung vào rule clarity, level readability, solution logging
+- Không có save account, leaderboard, monetization, audio polish trong MVP
