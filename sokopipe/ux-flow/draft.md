@@ -13,7 +13,7 @@ Main Menu → Level Select → Gameplay → Win Panel → Level Select
 | Màn hình | Nội dung |
 |----------|----------|
 | Main Menu | Logo Soko Pipe, nút Play, nút Credits |
-| Level Select | Grid 15 level, chưa unlock = khoá, đã clear = tick |
+| Level Select | Grid 14 level, chưa unlock = khoá, đã clear = tick |
 | Gameplay | Grid + HUD |
 | Win Panel | "Level Complete", số bước, nút Next Level |
 | Pause Menu | Resume, Reset, Back to Level Select |

@@ -1,13 +1,13 @@
 # Soko Pipe — Level Layouts
 
-> Legend: 0=sàn, 1=tường, 2=player, 3=goal, 4=box, 5=ống ngang, 6=ống dọc
-> 7=connector đa hướng, 8=┘, 9=└, 10=┐, 11=┌, 12=key, 13=door
+> Legend: 0=sàn, 1=tường, 2=player, 3=goal, 4=box, 5=ống ngang, 6=ống dọc, 7=connector đa hướng
 
 > Movement: pipe đơn lẻ = đẩy như box. Pipe nối pipe đúng hướng = tunnel, player xuyên qua.
 > Tunnel entry: player chỉ bắt đầu xuyên từ `5` theo ngang hoặc `6` theo dọc.
-> Connector/corner không vào trực tiếp từ sàn; chỉ hoạt động bên trong route đã bắt đầu từ 5/6.
-> Connector cho phép đi thẳng hoặc rẽ tự do; corner về sau là connector bị khóa hướng.
+> Connector không vào trực tiếp từ sàn; chỉ hoạt động bên trong route đã bắt đầu từ 5/6.
+> Connector cho phép đi thẳng hoặc rẽ tự do.
 > Connector route tối thiểu 3 ô: entry pipe → connector → exit pipe/goal.
+> Out of scope: directional corner, key/door, color gate, enemy.
 
 > Difficulty metric: `Steps` = số input di chuyển trong intended solution, tính cả move, push, và xuyên tunnel.
 
@@ -190,28 +190,108 @@ Dạy: phải đẩy cái `6` thứ hai vào thẳng hàng với cái `6` đầu
 
 - Grid: 7×8
 - Steps: 15
-- Solution: ↑, →, →, →, ↑, ←, ←, ↓, ←, ↑, ↑, →, →, →, →
+- Solution: ↑, →, →, →, ↑, ←, ←, ↓, ←, ↑, ↑, →, →, →, →s
 - Flow:
   - Đi tới bên phải cái `6` thứ hai.
   - Push `6` sang trái 2 lần để nó thẳng hàng với `6` đầu.
   - Dùng bridge dọc mới tạo để lên top lane, rồi xuyên pipe ngang vào goal.
 
-### Level 10 — Two straight tunnels
+### Level 10 — straight tunnel with normal box
 
-**Layout TBD** — redesign theo rule bridge; multiple tunnel chỉ có ý nghĩa nếu tunnel sai/dúng thay đổi khả năng access.
+```
+1 1 1 1 1 1 1 1 1
+1 1 0 0 0 0 4 0 3
+1 1 1 0 1 5 0 0 1
+1 1 1 0 0 0 0 1 1
+1 1 1 1 1 1 0 1 1
+1 0 0 0 1 1 0 1 1
+1 0 1 5 1 1 0 1 1
+1 2 0 0 5 0 0 1 1
+1 1 1 1 1 1 1 1 1
+```
 
 ### Level 11 — Straight tunnel boss
 
-**Layout TBD** — boss Ch.2 cần combine tunnel-as-bridge + box/order, chưa chốt layout.
+Dạy: boss của Chapter 2. Player phải dọn 2 box để mở đúng hành lang push, căn pipe dọc thành bridge, dùng tunnel ngang để sang nửa phải, rồi đẩy pipe cuối từ dưới lên vào lane goal trước khi xuyên.
 
-## Chapter 3: Connector Tunnels (Level 12-16)
+```
+1 1 1 1 1 1 1 1 1 1
+1 0 0 0 0 0 0 0 0 1
+1 6 1 1 1 1 0 6 0 1
+1 0 0 1 0 1 0 5 0 1
+1 0 4 6 4 1 0 0 1 1
+1 0 0 0 0 1 0 0 1 1
+1 2 1 1 1 1 1 3 1 1
+1 1 1 1 1 1 1 1 1 1
+```
 
-**Layout TBD** — thiết kế sau khi Chapter 2 được chốt.
+- Grid: 11×8
+- Steps: 31
+- Solution: ↑, →, ↑, ↓, →, →, ↑, ←, ←, ↓, ←, ↑, ↑, ↑, ↑, →, →, →, →, →, ↓, ↓, →, →, ↑, ←, ←, ↑, →, →, →
+- Flow:
+  - Push box bên trái lên để mở ô đích cho pipe dọc.
+  - Đi vòng sang phải, push box bên phải lên để mở ô đứng bên phải pipe dọc.
+  - Đẩy pipe dọc sang trái 2 lần để nó thẳng hàng với pipe dọc phía trên.
+  - Quay xuống cột trái, dùng bridge dọc mới tạo để lên top lane.
+  - Dùng tunnel ngang `5 0 5` để sang nửa phải top lane, rồi đi vòng xuống dưới pipe cuối.
+  - Push pipe cuối lên vào ô sát goal.
+  - Quay lại bên trái pipe vừa đặt, xuyên pipe ngang để vào goal.
+- Core idea: kiểm tra lại toàn bộ Chapter 2: tunnel là access tool, pipe phải được căn đúng hàng, box/order quyết định cả ô đứng lẫn ô đích, và endpoint goal phải do player tự tạo trước khi win.
 
-## Chapter 4: Directional Corners (Level 17-21)
+## Chapter 3: Connector Tunnels (Level 12-14)
 
-**Layout TBD** — thiết kế sau khi Chapter 3 được chốt.
+Mục tiêu: nối tiếp Chapter 2 bằng các tunnel route có bẻ hướng. Connector không cần một level showcase riêng; nó xuất hiện như một đoạn trong route di chuyển, rồi dần trở thành thứ player phải đặt đúng chỗ để mở đường.
 
-## Chapter 5: Build + Mastery (Level 22-25)
+### Level 12 — Connector bridge
 
-**Layout TBD** — thiết kế sau khi Chapter 4 được chốt.
+Dạy: connector là một đoạn trong route di chuyển, không phải object tutorial đứng riêng. Level này nhẹ hơn Level 11 nhưng vẫn dùng connector để bắc qua vùng bị chặn.
+
+```
+1 1 1 1 1 1 1
+1 2 0 0 0 0 1
+1 1 1 4 7 0 1
+1 1 0 0 1 1 1
+1 1 0 0 0 0 3
+1 1 0 0 6 0 1
+1 1 1 1 0 0 1
+1 1 1 1 1 1 1
+1 1 1 1 1 1 1
+```
+
+### Level 13 — Reverse bend
+
+Dạy: cùng một connector nhưng đảo hướng route: vào bằng pipe dọc, ra bằng pipe ngang.
+
+```
+1 1 1 1 1 1 1 1 1 1
+1 1 0 0 1 1 1 1 1 1
+1 1 0 0 0 0 0 0 0 1
+1 3 0 1 4 1 1 0 0 1
+1 1 1 1 0 6 0 7 1 1
+1 1 1 1 0 1 0 0 1 1
+1 1 1 1 1 1 2 1 1 1
+1 1 1 1 1 1 1 1 1 1
+```
+
+- Grid: 6×6
+- Steps: 6
+- Solution: →, ↑, ↑, ↑, ←, ←
+- Flow: đi lên vào `6`, qua connector, rẽ trái qua `5`, rồi vào goal.
+- Core idea: connector là omni-direction; H→V và V→H là cùng một luật.
+
+### Level 14 — Connect to move
+
+Dạy: đôi khi route chưa có sẵn. Player phải đẩy connector vào khe để tạo route, rồi mới dùng route đó để di chuyển tới goal.
+
+```
+1 1 1 1 1 1 1 1 1 1 1 1 1
+1 1 2 0 0 0 0 1 1 1 1 1 1
+1 1 0 0 0 7 0 1 1 1 1 1 1
+1 1 1 0 0 1 1 1 1 1 1 1 1
+1 1 1 0 4 0 5 0 1 1 1 1 1
+1 1 1 0 0 1 1 0 0 0 0 1 1
+1 1 1 0 6 1 1 1 0 1 6 0 1
+1 1 1 0 0 1 1 1 0 0 0 0 1
+1 1 1 1 1 1 1 1 0 1 1 1 1
+1 1 1 1 1 1 1 1 3 1 1 1 1
+```

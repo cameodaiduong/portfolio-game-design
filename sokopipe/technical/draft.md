@@ -19,12 +19,9 @@ Dùng số, template string / 2D array:
 | 4 | Box thường |
 | 5 | Ống ngang |
 | 6 | Ống dọc |
-| 7 | Ống góc ┘ |
-| 8 | Ống góc └ |
-| 9 | Ống góc ┐ |
-| 10 | Ống góc ┌ |
-| 11 | Key |
-| 12 | Door |
+| 7 | Connector đa hướng |
+
+Out of scope trong MVP: key/door, directional corner, color gate, enemy.
 
 ```js
 const level1 = [
@@ -38,13 +35,13 @@ const level1 = [
 ]
 ```
 
-## 5.3 Grid Size
+## 5.3 Level Scope
 
 | Chapter | Level | Grid |
 |---------|-------|------|
-| 1-2 | 1-6 | 7×7 |
-| 3 | 7-9 | 8×8 |
-| 4-5 | 10-15 | 9×9 |
+| 1 | 1-6 | linh động, nhỏ/gọn |
+| 2 | 7-11 | linh động, bridge/access rõ |
+| 3 | 12-14 | linh động, connector route/build |
 
 ## 5.4 Core Systems
 
@@ -64,7 +61,7 @@ const level1 = [
 2. Push logic (30 phút)
 3. Tunnel pass-through (30 phút)
 4. Undo + reset (15 phút)
-5. Level manager + 15 level data (45 phút)
+5. Level manager + 14 level data (45 phút)
 6. UI: menu, level select, win panel (30 phút)
 7. Polish: animation, mesh, sound (30 phút)
 

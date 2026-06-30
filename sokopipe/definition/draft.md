@@ -8,6 +8,7 @@ Soko Pipe = sokoban + tunnel mechanic. Player đẩy box để mở đường, n
 - Platform: Web (Three.js)
 - Single player
 - Session: 1-3 phút/level
+- Scope MVP: 14 level, 3 mechanic chính: push, straight tunnel, connector
 - Tham chiếu: Sokoban (push), Baba Is You (rule twist), Sokobond (simple mechanic deep puzzle)
 
 ## 1.2 Game Pillars
