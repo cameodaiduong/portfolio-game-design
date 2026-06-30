@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Soko Pipe</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <aside class="sidebar" aria-label="Level list">
+        <div class="brand">
+          <h1>Soko Pipe</h1>
+          <p>Push pipes. Build tunnels.</p>
+        </div>
+        <div id="levelList" class="level-list"></div>
+      </aside>
+
+      <section class="game-shell" aria-label="Game board">
+        <header class="toolbar">
+          <div>
+            <div id="levelTitle" class="level-title">Level 1</div>
+            <div id="levelMeta" class="level-meta">Moves 0</div>
+          </div>
+          <div class="actions">
+            <button id="undoBtn" type="button" title="Undo">Undo</button>
+            <button id="resetBtn" type="button" title="Reset">Reset</button>
+          </div>
+        </header>
+
+        <div id="viewport" class="viewport" aria-label="Soko Pipe 3D viewport">
+          <div class="viewport-label">3D cube-mesh prototype</div>
+        </div>
+
+        <footer class="status">
+          <span id="statusText">Arrow keys or WASD to move.</span>
+        </footer>
+      </section>
+
+      <aside class="control-panel" aria-label="Controls and move log">
+        <section class="help-panel">
+          <h2>Controls</h2>
+          <p>Move with arrow keys, WASD, or buttons below.</p>
+        </section>
+
+        <section class="touch-controls" aria-label="Touch controls">
+          <button id="upBtn" class="dpad-btn up" type="button" title="Move up">↑</button>
+          <button id="leftBtn" class="dpad-btn left" type="button" title="Move left">←</button>
+          <button id="rightBtn" class="dpad-btn right" type="button" title="Move right">→</button>
+          <button id="downBtn" class="dpad-btn down" type="button" title="Move down">↓</button>
+        </section>
+
+        <div class="panel-actions">
+          <button id="panelUndoBtn" type="button">Undo</button>
+          <button id="panelResetBtn" type="button">Reset</button>
+          <button id="exportStepsBtn" type="button">Export Steps</button>
+        </div>
+
+        <section class="move-panel">
+          <div class="move-panel-head">
+            <h2>Steps</h2>
+            <span id="moveCountText">0</span>
+          </div>
+          <ol id="moveLog" class="move-log"></ol>
+        </section>
+      </aside>
+
+      <div id="clearPopup" class="clear-popup hidden" role="dialog" aria-modal="true" aria-labelledby="clearTitle">
+        <div class="clear-card">
+          <h2 id="clearTitle">Level Clear</h2>
+          <p id="clearSummary">Moves 0</p>
+          <p id="clearCountdown">Next level in 5s</p>
+          <div class="clear-actions">
+            <button id="clearExportBtn" type="button">Export Steps</button>
+            <button id="nextLevelBtn" type="button">Next Level</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
+    <script src="./levels.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

@@ -44,14 +44,14 @@ Dạy: pipe đơn lẻ bị đẩy như box; pipe chạm goal thì trở thành 
 Dạy: vertical pipe dùng cùng luật với horizontal pipe, chỉ đổi trục lên/xuống.
 
 ```
-1 1 3 1 1
-1 1 0 1 1
-1 1 6 1 1
-1 1 2 1 1
-1 1 1 1 1
+1 3 1
+1 0 1
+1 6 1
+1 2 1
+1 1 1
 ```
 
-- Grid: 5×5
+- Grid: 3×5
 - Steps: 2
 - Solution: ↑, ↑
 - Flow: push pipe dọc lên 1 ô, rồi xuyên pipe lên goal.
@@ -255,7 +255,6 @@ Dạy: connector là một đoạn trong route di chuyển, không phải object
 1 1 0 0 6 0 1
 1 1 1 1 0 0 1
 1 1 1 1 1 1 1
-1 1 1 1 1 1 1
 ```
 
 ### Level 13 — Reverse bend
@@ -284,14 +283,14 @@ Dạy: cùng một connector nhưng đảo hướng route: vào bằng pipe dọ
 Dạy: đôi khi route chưa có sẵn. Player phải đẩy connector vào khe để tạo route, rồi mới dùng route đó để di chuyển tới goal.
 
 ```
-1 1 1 1 1 1 1 1 1 1 1 1 1
-1 1 2 0 0 0 0 1 1 1 1 1 1
-1 1 0 0 0 7 0 1 1 1 1 1 1
-1 1 1 0 0 1 1 1 1 1 1 1 1
-1 1 1 0 4 0 5 0 1 1 1 1 1
-1 1 1 0 0 1 1 0 0 0 0 1 1
-1 1 1 0 6 1 1 1 0 1 6 0 1
-1 1 1 0 0 1 1 1 0 0 0 0 1
-1 1 1 1 1 1 1 1 0 1 1 1 1
-1 1 1 1 1 1 1 1 3 1 1 1 1
+1 1 1 1 1 1 1 1 1 1 1 1
+1 2 0 0 0 0 1 1 1 1 1 1
+1 1 0 0 7 0 1 1 1 1 1 1
+1 1 0 0 1 1 1 1 1 1 1 1
+1 1 0 4 0 5 0 1 1 1 1 1
+1 1 0 1 0 1 0 0 0 0 1 1
+1 1 0 6 0 1 1 0 1 6 0 1
+1 1 0 0 0 1 1 0 0 0 0 1
+1 1 1 1 1 1 1 0 1 1 1 1
+1 1 1 1 1 1 1 3 1 1 1 1
 ```
