@@ -106,7 +106,10 @@
             </button>
           </div>
         </div>
-        <article id="sokoDoc" class="doc">Loading Soko Pipe GDD...</article>
+        <div class="doc-layout">
+          <nav class="doc-sidebar" id="sokoSidebar"></nav>
+          <article id="sokoDoc" class="doc">Loading Soko Pipe GDD...</article>
+        </div>
       </section>
 
       <section id="deconstruction" class="page doc-section">
@@ -132,9 +135,12 @@
             </button>
           </div>
         </div>
-        <article id="airforceDoc" class="doc">
-          Loading 1945 Air Force analysis...
-        </article>
+        <div class="doc-layout">
+          <nav class="doc-sidebar" id="airforceSidebar"></nav>
+          <article id="airforceDoc" class="doc">
+            Loading 1945 Air Force analysis...
+          </article>
+        </div>
       </section>
     </main>
 
@@ -334,6 +340,124 @@
         return html.join("\n");
       };
 
+      const sidebarMap = {
+        sokoDoc: "sokoSidebar",
+        airforceDoc: "airforceSidebar",
+      };
+
+      const buildSidebar = (docId) => {
+        const sidebarId = sidebarMap[docId];
+        if (!sidebarId) return;
+        const sidebar = document.getElementById(sidebarId);
+        const doc = document.getElementById(docId);
+        if (!sidebar || !doc) return;
+
+        const headings = [...doc.querySelectorAll("h2, h3, h4, h5")];
+        sidebar.innerHTML = "";
+
+        headings.forEach((h, i) => {
+          h.id = `${docId}-s${i}`;
+        });
+
+        const makeLink = (h, cls) => {
+          const a = document.createElement("a");
+          a.className = cls;
+          a.href = `#${h.id}`;
+          a.textContent = h.textContent;
+          a.addEventListener("click", (e) => {
+            e.preventDefault();
+            h.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+          return a;
+        };
+
+        let i = 0;
+        while (i < headings.length) {
+          const h = headings[i];
+
+          if (h.tagName === "H2") {
+            sidebar.appendChild(makeLink(h, "toc-parent"));
+            i++;
+            continue;
+          }
+
+          if (h.tagName === "H3") {
+            const subItems = [];
+            let j = i + 1;
+            while (j < headings.length && (headings[j].tagName === "H4" || headings[j].tagName === "H5")) {
+              subItems.push(headings[j]);
+              j++;
+            }
+
+            if (subItems.length) {
+              const isFirst = !sidebar.querySelector(".toc-group");
+              const group = document.createElement("div");
+              group.className = isFirst ? "toc-group" : "toc-group collapsed";
+
+              const parentLink = makeLink(h, "toc-parent toc-sub");
+              const arrow = document.createElement("span");
+              arrow.className = "toc-arrow";
+              arrow.textContent = "▼";
+              parentLink.prepend(arrow);
+
+              arrow.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                group.classList.toggle("collapsed");
+              });
+
+              group.appendChild(parentLink);
+
+              const childContainer = document.createElement("div");
+              childContainer.className = "toc-children";
+              subItems.forEach((ch) => {
+                const link = makeLink(ch, "toc-child");
+                link.dataset.depth = ch.tagName[1];
+                childContainer.appendChild(link);
+              });
+              group.appendChild(childContainer);
+              sidebar.appendChild(group);
+              i = j;
+            } else {
+              sidebar.appendChild(makeLink(h, "toc-child"));
+              i++;
+            }
+            continue;
+          }
+
+          sidebar.appendChild(makeLink(h, "toc-child"));
+          i++;
+        }
+
+        setupScrollSpy(doc, sidebar);
+      };
+
+      let activeObserver = null;
+      const setupScrollSpy = (doc, sidebar) => {
+        if (activeObserver) activeObserver.disconnect();
+        const links = [...sidebar.querySelectorAll("a")];
+        if (!links.length) return;
+
+        activeObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                links.forEach((l) => l.classList.remove("active"));
+                const match = links.find(
+                  (l) => l.getAttribute("href") === `#${entry.target.id}`,
+                );
+                if (match) match.classList.add("active");
+              }
+            });
+          },
+          { rootMargin: "-72px 0px -60% 0px", threshold: 0 },
+        );
+
+        doc.querySelectorAll("h2, h3, h4, h5").forEach((h) => {
+          if (h.id) activeObserver.observe(h);
+        });
+      };
+
       const loadDoc = async ({ id, path, base }) => {
         const target = document.getElementById(id);
         try {
@@ -342,6 +466,7 @@
             throw new Error(`${response.status} ${response.statusText}`);
           const markdown = await response.text();
           target.innerHTML = renderMarkdown(markdown, base);
+          buildSidebar(id);
         } catch (error) {
           target.textContent = `Could not load ${path}: ${error.message}`;
         }
