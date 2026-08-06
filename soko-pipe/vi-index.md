@@ -27,7 +27,18 @@ Soko Pipe là biến thể sokoban kết hợp tunnel mechanic. Player đẩy bo
 
 ### 1.3 Core Loop
 
-Chọn level, quan sát grid, đẩy hoặc xuyên box, đến đích, unlock level tiếp
+```mermaid
+flowchart LR
+    A[Chọn Level] --> B[Quan Sát Grid]
+    B --> C[Đẩy / Xuyên Box]
+    C --> D[Đến Đích]
+    D --> E[Unlock Level Tiếp]
+    E --> A
+
+    classDef node fill:#f3f4f6,stroke:#6b7280,color:#111827,stroke-width:1.5px;
+    class A,B,C,D,E node;
+    linkStyle default stroke:#6b7280,stroke-width:2px;
+```
 
 ### 1.4 USP
 

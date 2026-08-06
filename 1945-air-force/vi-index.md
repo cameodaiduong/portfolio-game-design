@@ -28,7 +28,7 @@ Nhưng thứ giữ người chơi lại nằm ở phần meta:
 Bản deconstruction này phân tích cách 1945 Air Force tổ chức các hệ thống như máy bay, gear, event, VIP, economy và monetization thành một vòng lặp liên tục: người chơi vào combat, nhận reward, dùng reward để nâng cấp, gặp nhu cầu tài nguyên mới, rồi được dẫn sang farm, event, ad, gacha hoặc shop trước khi quay lại combat mạnh hơn.
 
 ```mermaid
-flowchart LR
+flowchart TB
     A[Battle] --> B[Reward]
     B --> C[Upgrade / Optimize Loadout]
     C --> D[Power Gap]

@@ -12,10 +12,13 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#top">Game Design Portfolio</a>
+      <a class="brand" href="#overview">Game Design Portfolio</a>
       <nav aria-label="Page navigation" class="tabs">
         <button class="tab active" type="button" data-page="overview">
           Overview
+        </button>
+        <button class="tab" type="button" data-page="cv">
+          CV
         </button>
         <button class="tab" type="button" data-page="soko-pipe">
           Soko Pipe
@@ -29,17 +32,19 @@
     <main id="top">
       <section id="overview" class="page active">
         <section class="hero">
-          <p class="eyebrow">Portfolio Submission</p>
+          <p class="eyebrow">Truong Trung Hieu — Game Designer</p>
           <h1>Playable prototype + design documentation</h1>
           <p>
-            This page collects the two main materials for review: a playable 3D
-            puzzle prototype with its GDD, and a systems deconstruction of 1945
-            Air Force.
+            Puzzle game prototype (Soko Pipe), game design document, and 1945
+            Air Force design analysis.
           </p>
           <div class="actions">
             <a class="button primary" href="./soko-pipe/app/index.html"
               >Play Soko Pipe</a
             >
+            <button class="button" type="button" data-page="cv">
+              View CV
+            </button>
             <button class="button" type="button" data-page="soko-pipe">
               Read Soko Pipe GDD
             </button>
@@ -82,12 +87,16 @@
 
       <section id="soko-pipe" class="page doc-section">
         <div class="section-title">
-          <span class="kicker">Game Design Document</span>
-          <h2>Soko Pipe</h2>
+          <div>
+            <span class="kicker">Game Design Document</span>
+            <h2>Soko Pipe</h2>
+          </div>
           <div class="section-links">
             <a class="button primary" href="./soko-pipe/app/index.html"
               >Play Soko Pipe</a
             >
+          </div>
+          <div class="lang-toggle">
             <button
               class="lang-button active"
               type="button"
@@ -114,9 +123,12 @@
 
       <section id="deconstruction" class="page doc-section">
         <div class="section-title">
-          <span class="kicker">Design Deconstruction</span>
-          <h2>1945 Air Force</h2>
-          <div class="section-links">
+          <div>
+            <span class="kicker">Design Deconstruction</span>
+            <h2>1945 Air Force</h2>
+          </div>
+          <div class="section-links"></div>
+          <div class="lang-toggle">
             <button
               class="lang-button active"
               type="button"
@@ -140,6 +152,28 @@
           <article id="airforceDoc" class="doc">
             Loading 1945 Air Force analysis...
           </article>
+        </div>
+      </section>
+      <section id="cv" class="page doc-section">
+        <div class="section-title">
+          <div>
+            <span class="kicker">Curriculum Vitae</span>
+            <h2>Truong Trung Hieu</h2>
+          </div>
+          <div class="section-links">
+            <a
+              class="button primary"
+              href="./Truong_Trung_Hieu_Game_Designer_Intern_CV.pdf"
+              target="_blank"
+              >Download PDF</a
+            >
+          </div>
+        </div>
+        <div class="cv-embed">
+          <iframe
+            src="./Truong_Trung_Hieu_Game_Designer_Intern_CV.html"
+            title="CV"
+          ></iframe>
         </div>
       </section>
     </main>
@@ -236,6 +270,7 @@
         let table = [];
         let code = [];
         let inCode = false;
+        let codeLang = "";
 
         const flushParagraph = () => {
           if (!paragraph.length) return;
@@ -268,13 +303,19 @@
 
           if (line.startsWith("```")) {
             if (inCode) {
-              html.push(
-                `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`,
-              );
+              if (codeLang === "mermaid") {
+                html.push(`<pre class="mermaid">${code.join("\n")}</pre>`);
+              } else {
+                html.push(
+                  `<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`,
+                );
+              }
               code = [];
               inCode = false;
+              codeLang = "";
             } else {
               flushBlocks();
+              codeLang = line.slice(3).trim();
               inCode = true;
             }
             continue;
@@ -467,6 +508,7 @@
           const markdown = await response.text();
           target.innerHTML = renderMarkdown(markdown, base);
           buildSidebar(id);
+          if (window.runMermaid) window.runMermaid();
         } catch (error) {
           target.textContent = `Could not load ${path}: ${error.message}`;
         }
@@ -494,7 +536,8 @@
       const tabControls = [...document.querySelectorAll("[data-page]")];
 
       const showPage = (id) => {
-        const nextId = document.getElementById(id) ? id : "overview";
+        const match = pages.find((p) => p.id === id);
+        const nextId = match ? id : "overview";
         pages.forEach((page) =>
           page.classList.toggle("active", page.id === nextId),
         );
@@ -504,6 +547,7 @@
         if (location.hash !== `#${nextId}`)
           history.replaceState(null, "", `#${nextId}`);
         window.scrollTo({ top: 0, behavior: "instant" });
+        if (window.runMermaid) setTimeout(window.runMermaid, 50);
       };
 
       tabControls.forEach((control) => {
@@ -514,6 +558,21 @@
         showPage(location.hash.replace("#", "")),
       );
       showPage(location.hash.replace("#", "") || "overview");
+    </script>
+    <script src="./mermaid.min.js"></script>
+    <script>
+      mermaid.initialize({ startOnLoad: false, theme: "neutral" });
+      window.runMermaid = function() {
+        var els = document.querySelectorAll("pre.mermaid:not([data-mmd])");
+        if (!els.length) return;
+        var visible = Array.from(els).filter(function(el) {
+          return el.offsetParent !== null;
+        });
+        if (!visible.length) return;
+        visible.forEach(function(el) { el.setAttribute("data-mmd", "1"); });
+        mermaid.run({ nodes: visible });
+      };
+      runMermaid();
     </script>
   </body>
 </html>

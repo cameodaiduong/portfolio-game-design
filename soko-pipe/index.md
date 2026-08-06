@@ -27,7 +27,18 @@ Soko Pipe is a sokoban variant combined with a tunnel mechanic. Players push box
 
 ### 1.3 Core Loop
 
-Select level, observe grid, push or traverse boxes, reach goal, unlock next level
+```mermaid
+flowchart LR
+    A[Select Level] --> B[Observe Grid]
+    B --> C[Push / Traverse Boxes]
+    C --> D[Reach Goal]
+    D --> E[Unlock Next Level]
+    E --> A
+
+    classDef node fill:#f3f4f6,stroke:#6b7280,color:#111827,stroke-width:1.5px;
+    class A,B,C,D,E node;
+    linkStyle default stroke:#6b7280,stroke-width:2px;
+```
 
 ### 1.4 USP
 

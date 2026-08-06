@@ -28,7 +28,7 @@ But what keeps players is the meta:
 This deconstruction analyzes how 1945 Air Force organizes systems like aircraft, gear, events, VIP, economy, and monetization into a continuous loop: players enter combat, earn rewards, use rewards to upgrade, encounter new resource needs, then get routed to farming, events, ads, gacha, or shop before returning to combat stronger.
 
 ```mermaid
-flowchart LR
+flowchart TB
     A[Battle] --> B[Reward]
     B --> C[Upgrade / Optimize Loadout]
     C --> D[Power Gap]
